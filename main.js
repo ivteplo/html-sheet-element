@@ -17,12 +17,19 @@ const setIsSheetShown = (value) => {
   sheet.setAttribute("aria-hidden", String(!value))
 }
 
+// Open the sheet when clicking the 'open sheet' button
 openSheetButton.addEventListener("click", () => {
   setSheetHeight(Math.min(50, 720 / window.innerHeight * 100))
   setIsSheetShown(true)
 })
 
+// Hide the sheet when clicking the 'close' button
 sheet.querySelector(".close-sheet").addEventListener("click", () => {
+  setIsSheetShown(false)
+})
+
+// Hide the sheet when clicking the background
+sheet.querySelector(".overlay").addEventListener("click", () => {
   setIsSheetShown(false)
 })
 
