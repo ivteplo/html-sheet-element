@@ -28,8 +28,11 @@ body {
 body {
   background: var(--background);
   color: var(--foreground);
+
   overflow: hidden;
   line-height: 1.5;
+
+  -webkit-tap-highlight-color: transparent;
 }
 
 button {
@@ -79,7 +82,7 @@ button {
   position: relative;
   overflow-y: hidden;
 
-  transition: transform 0.5s, height 0.08s ease-out;
+  transition: transform 0.5s;
   transform: translateY(0);
 
   max-height: 100vh;
