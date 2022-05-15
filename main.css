@@ -95,6 +95,10 @@ button {
   padding-top: 3rem;
 }
 
+#sheet .contents:not(.not-selectable) {
+  transition: transform 0.5s, height 0.5s;
+}
+
 #sheet[aria-hidden="true"] .contents {
   transform: translateY(100%);
 }

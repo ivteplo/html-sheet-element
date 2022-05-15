@@ -53,6 +53,10 @@ const onDragEnd = () => {
 
   if (sheetHeight < 20) {
     setIsSheetShown(false)
+  } else if (sheetHeight >= 75) {
+    setSheetHeight(100)
+  } else {
+    setSheetHeight(50)
   }
 }
 
