@@ -1,0 +1,48 @@
+<!-- Copyright (c) 2022 Ivan Teplov -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bottom Sheet</title>
+
+    <!-- Utility classes for CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/@ivteplo/utilities.css@1.0.0/build/main.css">
+
+    <!-- Custom stylesheet -->
+    <link rel="stylesheet" href="main.css">
+
+    <!-- Script that makes the sheet work -->
+    <script src="main.js" defer></script>
+  </head>
+  <body class="font-system column fill items-center justify-center">
+    <!-- Button to open a sheet -->
+    <button type="button" id="open-sheet" aria-controls="sheet">Open Sheet</button>
+
+    <!-- The sheet component -->
+    <div id="sheet" class="column items-center justify-end" aria-hidden="true">
+      <!-- Dark background for the sheet -->
+      <div class="overlay"></div>
+
+      <!-- The sheet itself -->
+      <div class="contents column">
+        <!-- Sheet controls -->
+        <header class="controls">
+          <!-- The thing to drag if you want to resize the sheet -->
+          <div class="draggable-area">
+            <div class="draggable-thumb"></div>
+          </div>
+          <!-- Button to close the sheet -->
+          <button class="close-sheet" type="button" title="Close the sheet">&times;</button>
+        </header>
+
+        <!-- Body of the sheet -->
+        <main class="body fill column">
+          <h2>Hello, World!</h2>
+          <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Impedit explicabo vero quas eligendi, eos cupiditate sint aliquam a omnis commodi quos in libero veniam. Quidem, non a quibusdam consequuntur mollitia officia numquam sit quos dolorum quaerat reprehenderit laboriosam perspiciatis consequatur odit error dolore recusandae iste id quam magnam ut! Sint nulla minus excepturi libero officiis, deleniti, delectus obcaecati saepe natus rerum nesciunt! Nemo quo id ipsum fugiat voluptas ducimus incidunt nulla sed, voluptates modi exercitationem quod obcaecati corporis perspiciatis dolorum ullam provident sint iusto consequatur totam dolorem. Amet, praesentium accusamus dolore hic ad iusto nostrum exercitationem velit ex optio nihil obcaecati provident enim nobis molestiae cupiditate possimus error itaque facilis eligendi placeat eos quam! Consequatur eveniet corporis nam accusantium nemo harum non explicabo accusamus. Voluptatem laborum dolores magni voluptatibus doloribus sunt? Id quae vero, nemo nam dolore ab amet distinctio molestias excepturi blanditiis quia eos et eligendi magnam voluptas iusto.</p>
+        </main>
+      </div>
+    </div>
+  </body>
+</html>

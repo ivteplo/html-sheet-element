@@ -1,0 +1,127 @@
+/* Copyright (c) 2022 Ivan Teplov */
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --background: #fff;
+  --foreground: #000;
+  --divider: #dcdcdc;
+  --overlay: #888;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #000;
+    --foreground: #fff;
+    --divider: #333;
+  }
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  overflow: hidden;
+  line-height: 1.5;
+}
+
+button {
+  padding: 1rem;
+  font-size: 1rem;
+  border-radius: 1rem;
+  border: 0.0625rem solid var(--divider);
+
+  background: var(--background);
+  color: var(--foreground);
+  cursor: pointer;
+}
+
+#sheet {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 2;
+  visibility: visible;
+  transition: opacity 0.5s, visibility 0.5s;
+}
+
+#sheet[aria-hidden="true"] {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+#sheet .overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: -1;
+  background: var(--overlay);
+  opacity: 0.5;
+}
+
+#sheet .contents {
+  border-radius: 1rem 1rem 0 0;
+
+  background: var(--background);
+
+  position: relative;
+  overflow-y: hidden;
+
+  transition: transform 0.5s, height 0.08s ease-out;
+  transform: translateY(0);
+
+  max-height: 100vh;
+  height: 30vh;
+
+  max-width: 70rem;
+
+  box-sizing: border-box;
+  padding: 1rem;
+  padding-top: 3rem;
+}
+
+#sheet[aria-hidden="true"] .contents {
+  transform: translateY(100%);
+}
+
+#sheet .draggable-area {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 3rem;
+  margin: auto;
+  padding: 1rem;
+}
+
+#sheet .draggable-thumb {
+  width: inherit;
+  height: 0.25rem;
+  background: var(--divider);
+  border-radius: 0.125rem;
+}
+
+#sheet .close-sheet {
+  position: absolute;
+  right: 0;
+  top: 0;
+  border: none;
+}
+
+#sheet .body {
+  height: 100%;
+  overflow-y: auto;
+  gap: 1rem;
+}
