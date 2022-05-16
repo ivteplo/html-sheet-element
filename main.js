@@ -5,6 +5,7 @@ const $ = document.querySelector.bind(document)
 const openSheetButton = $("#open-sheet")
 const sheet = $("#sheet")
 const sheetContents = sheet.querySelector(".contents")
+const draggableArea = sheet.querySelector(".draggable-area")
 
 let sheetHeight // in vh
 
@@ -41,6 +42,7 @@ let dragPosition
 const onDragStart = (event) => {
   dragPosition = touchPosition(event).pageY
   sheetContents.classList.add("not-selectable")
+  draggableArea.style.cursor = document.body.style.cursor = "grabbing"
 }
 
 const onDragMove = (event) => {
@@ -57,8 +59,9 @@ const onDragMove = (event) => {
 const onDragEnd = () => {
   dragPosition = undefined
   sheetContents.classList.remove("not-selectable")
+  draggableArea.style.cursor = document.body.style.cursor = ""
 
-  if (sheetHeight < 20) {
+  if (sheetHeight < 25) {
     setIsSheetShown(false)
   } else if (sheetHeight >= 75) {
     setSheetHeight(100)
@@ -66,8 +69,6 @@ const onDragEnd = () => {
     setSheetHeight(50)
   }
 }
-
-const draggableArea = sheet.querySelector(".draggable-area")
 
 draggableArea.addEventListener("mousedown", onDragStart)
 draggableArea.addEventListener("touchstart", onDragStart)

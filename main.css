@@ -111,6 +111,7 @@ button {
   width: 3rem;
   margin: auto;
   padding: 1rem;
+  cursor: grab;
 }
 
 #sheet .draggable-thumb {
