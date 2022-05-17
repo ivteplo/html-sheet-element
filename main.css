@@ -82,7 +82,9 @@ button {
   position: relative;
   overflow-y: hidden;
 
-  transition: transform 0.5s;
+  --default-transitions: transform 0.5s, border-radius 0.5s;
+
+  transition: var(--default-transitions);
   transform: translateY(0);
 
   max-height: 100vh;
@@ -96,7 +98,11 @@ button {
 }
 
 #sheet .contents:not(.not-selectable) {
-  transition: transform 0.5s, height 0.5s;
+  transition: var(--default-transitions), height 0.5s;
+}
+
+#sheet .contents.fullscreen {
+  border-radius: 0;
 }
 
 #sheet[aria-hidden="true"] .contents {

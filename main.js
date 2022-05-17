@@ -10,8 +10,14 @@ const draggableArea = sheet.querySelector(".draggable-area")
 let sheetHeight // in vh
 
 const setSheetHeight = (value) => {
-  sheetHeight = value
+  sheetHeight = Math.max(0, Math.min(100, value))
   sheetContents.style.height = `${sheetHeight}vh`
+
+  if (sheetHeight === 100) {
+    sheetContents.classList.add("fullscreen")
+  } else {
+    sheetContents.classList.remove("fullscreen")
+  }
 }
 
 const setIsSheetShown = (value) => {
@@ -63,7 +69,7 @@ const onDragEnd = () => {
 
   if (sheetHeight < 25) {
     setIsSheetShown(false)
-  } else if (sheetHeight >= 75) {
+  } else if (sheetHeight > 75) {
     setSheetHeight(100)
   } else {
     setSheetHeight(50)
