@@ -20,8 +20,8 @@ const setSheetHeight = (value) => {
   }
 }
 
-const setIsSheetShown = (value) => {
-  sheet.setAttribute("aria-hidden", String(!value))
+const setIsSheetShown = (isShown) => {
+  sheet.setAttribute("aria-hidden", String(!isShown))
 }
 
 // Open the sheet when clicking the 'open sheet' button
@@ -38,6 +38,19 @@ sheet.querySelector(".close-sheet").addEventListener("click", () => {
 // Hide the sheet when clicking the background
 sheet.querySelector(".overlay").addEventListener("click", () => {
   setIsSheetShown(false)
+})
+
+const isFocused = element => document.activeElement === element
+
+// Hide the sheet when pressing Escape if the target element
+// is not an input field
+window.addEventListener("keyup", (event) => {
+  const isSheetElementFocused =
+    sheet.contains(event.target) && isFocused(event.target)
+
+  if (event.key === "Escape" && !isSheetElementFocused) {
+    setIsSheetShown(false)
+  }
 })
 
 const touchPosition = (event) =>
