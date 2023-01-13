@@ -1,4 +1,4 @@
-/* Copyright (c) 2022 Ivan Teplov */
+/* Copyright (c) 2022-2023 Ivan Teplov */
 
 * {
   margin: 0;
@@ -158,10 +158,15 @@ button {
   flex-direction: column;
 
   overflow-y: auto;
-  gap: 1rem;
 
   padding: 1rem;
   box-sizing: border-box;
+}
+
+#sheet-body {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 
 form {

@@ -1,0 +1,19 @@
+{
+  "name": "@ivteplo/bottom-sheet",
+  "version": "1.0.0",
+  "description": "Bottom sheet, implemented in pure HTML, CSS, and JavaScript",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ivteplo/bottom-sheet.git"
+  },
+  "author": "Ivan Teplov <iteplov7@gmail.com>",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/ivteplo/bottom-sheet/issues"
+  },
+  "homepage": "https://github.com/ivteplo/bottom-sheet#readme"
+}

@@ -1,4 +1,4 @@
-<!-- Copyright (c) 2022 Ivan Teplov -->
+<!-- Copyright (c) 2022-2023 Ivan Teplov -->
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -20,36 +20,17 @@
     <!-- Button to open a sheet -->
     <button type="button" id="open-sheet" aria-controls="sheet">Open Sheet</button>
 
-    <!-- The sheet component -->
-    <div id="sheet" class="sheet" aria-hidden="true" role="dialog">
-      <!-- Dark background for the sheet -->
-      <div class="overlay"></div>
+    <!-- Contents that will go inside of the sheet -->
+    <div id="sheet-body">
+      <h2>Hello, World!</h2>
+      <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Impedit explicabo vero quas eligendi, eos cupiditate sint aliquam a omnis commodi quos in libero veniam. Quidem, non a quibusdam consequuntur mollitia officia numquam sit quos dolorum quaerat reprehenderit laboriosam perspiciatis consequatur odit error dolore recusandae iste id quam magnam ut! Sint nulla minus excepturi libero officiis, deleniti, delectus obcaecati saepe natus rerum nesciunt! Nemo quo id ipsum fugiat voluptas ducimus incidunt nulla sed, voluptates modi exercitationem quod obcaecati corporis perspiciatis dolorum ullam provident sint iusto consequatur totam dolorem. Amet, praesentium accusamus dolore hic ad iusto nostrum exercitationem velit ex optio nihil obcaecati provident enim nobis molestiae cupiditate possimus error itaque facilis eligendi placeat eos quam! Consequatur eveniet corporis nam accusantium nemo harum non explicabo accusamus. Voluptatem laborum dolores magni voluptatibus doloribus sunt? Id quae vero, nemo nam dolore ab amet distinctio molestias excepturi blanditiis quia eos et eligendi magnam voluptas iusto.</p>
 
-      <!-- The sheet itself -->
-      <div class="contents">
-        <!-- Sheet controls -->
-        <header class="controls">
-          <!-- The thing to drag if you want to resize the sheet -->
-          <div class="draggable-area">
-            <div class="draggable-thumb"></div>
-          </div>
-          <!-- Button to close the sheet -->
-          <button class="close-sheet" type="button" title="Close the sheet">&times;</button>
-        </header>
-
-        <!-- Body of the sheet -->
-        <main class="body">
-          <h2>Hello, World!</h2>
-          <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Impedit explicabo vero quas eligendi, eos cupiditate sint aliquam a omnis commodi quos in libero veniam. Quidem, non a quibusdam consequuntur mollitia officia numquam sit quos dolorum quaerat reprehenderit laboriosam perspiciatis consequatur odit error dolore recusandae iste id quam magnam ut! Sint nulla minus excepturi libero officiis, deleniti, delectus obcaecati saepe natus rerum nesciunt! Nemo quo id ipsum fugiat voluptas ducimus incidunt nulla sed, voluptates modi exercitationem quod obcaecati corporis perspiciatis dolorum ullam provident sint iusto consequatur totam dolorem. Amet, praesentium accusamus dolore hic ad iusto nostrum exercitationem velit ex optio nihil obcaecati provident enim nobis molestiae cupiditate possimus error itaque facilis eligendi placeat eos quam! Consequatur eveniet corporis nam accusantium nemo harum non explicabo accusamus. Voluptatem laborum dolores magni voluptatibus doloribus sunt? Id quae vero, nemo nam dolore ab amet distinctio molestias excepturi blanditiis quia eos et eligendi magnam voluptas iusto.</p>
-
-          <p>Here is a little form to test this sheet:</p>
-          <form action="" method="get" class="column">
-            <input type="email" placeholder="Email field">
-            <textarea placeholder="Text field"></textarea>
-            <div contenteditable="true">Contenteditable block</div>
-          </form>
-        </main>
-      </div>
+      <p>Here is a little form to test this sheet:</p>
+      <form action="" method="get" class="column">
+        <input type="email" placeholder="Email field">
+        <textarea placeholder="Text field"></textarea>
+        <div contenteditable="true">Contenteditable block</div>
+      </form>
     </div>
   </body>
 </html>
