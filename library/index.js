@@ -14,7 +14,7 @@ const isFocused = element => document.activeElement === element
 const touchPosition = (event) =>
   event.touches ? event.touches[0] : event
 
-class BottomSheet {
+export class BottomSheet {
   #height = 0 // in vh (viewport height)
   #contents
   #sheet
@@ -178,10 +178,4 @@ class BottomSheet {
   }
 }
 
-const openSheetButton = document.querySelector("#open-sheet")
-const sheetBody = document.querySelector("#sheet-body")
-const sheet = new BottomSheet(sheetBody)
-
-openSheetButton.addEventListener("click", () => {
-  sheet.setIsShown(true)
-})
+export default BottomSheet
