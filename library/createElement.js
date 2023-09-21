@@ -16,11 +16,13 @@ export function createElement(tagName, attributes, ...children) {
   for (const [attribute, value] of Object.entries(attributes)) {
     const eventHandlerPatternMatches = attribute.match(eventHandlerAttributePattern)
 
-    if (!eventHandlerPatternMatches) {
-      element.setAttribute(attribute, value)
-    } else {
+    if (eventHandlerPatternMatches) {
       const event = eventHandlerPatternMatches[1].toLowerCase()
       element.addEventListener(event, value)
+    } else if (attribute === "reference") {
+      value(element)
+    } else {
+      element.setAttribute(attribute, value)
     }
   }
 

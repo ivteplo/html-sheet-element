@@ -170,13 +170,16 @@ export class BottomSheet {
   #mount(contents) {
     this.#validateSheetIdentifier()
 
-    const sheet = (
+    let sheetBody
+
+    this.#sheetWrapper = (
       <div class={styles.sheet} id={this.#identifier} role="dialog" aria-hidden="true">
         <div class={styles.overlay} onClick={this.#onOverlayClick.bind(this)}></div>
-        <div class={styles.contents}>
+        <div class={styles.contents} reference={sheet => this.#sheet = sheet}>
           <header class={styles.controls}>
             <div
               class={styles.draggableArea}
+              reference={area => this.#draggableArea = area}
               onMouseDown={this.#onDragStart.bind(this)}
               onTouchStart={this.#onDragStart.bind(this)}
             >
@@ -193,16 +196,11 @@ export class BottomSheet {
               &times;
             </button>
           </header>
-          <main class={styles.body}></main>
+          <main class={styles.body} reference={body => sheetBody = body}></main>
         </div>
       </div>
     )
 
-    this.#sheetWrapper = sheet
-    this.#sheet = this.#sheetWrapper.querySelector("." + styles.contents)
-    this.#draggableArea = this.#sheet.querySelector("." + styles.draggableArea)
-
-    const sheetBody = this.#sheet.querySelector("." + styles.body)
     contents.replaceWith(this.#sheetWrapper)
     sheetBody.appendChild(contents)
 

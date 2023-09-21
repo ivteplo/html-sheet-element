@@ -5,8 +5,8 @@
 
 import { BottomSheet } from "../library/index"
 
-const openSheetButton = document.querySelector("#open-sheet")
-const sheetBody = document.querySelector("#sheet-body")
+const openSheetButton = document.getElementById("open-sheet")
+const sheetBody = document.getElementById("sheet-body")
 const sheet = new BottomSheet("sheet", sheetBody)
 
 /*
