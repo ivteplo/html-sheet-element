@@ -25,24 +25,46 @@ const touchPosition = (event) =>
 export class BottomSheet {
   #height = 0 // in vh (viewport height)
 
+  #identifier
+  #sheetWrapper
   #sheet
-  #contents
   #draggableArea
 
   /**
+   * @param {string} identifier
    * @param {HTMLElement} contents
    * @param {object} options
    * @param {boolean?} options.closeOnBackgroundClick
    * @param {boolean?} options.closeOnEscapeKey
    */
-  constructor(contents, options = {}) {
+  constructor(identifier, contents, options = {}) {
+    this.#identifier = identifier
+
     this.options = {
       closeOnBackgroundClick: true,
       closeOnEscapeKey: true,
       ...options
     }
 
-    this.#wrapContents(contents)
+    this.#mount(contents)
+  }
+
+  get id() {
+    return this.#identifier
+  }
+
+  get identifier() {
+    return this.#identifier
+  }
+
+  #validateSheetIdentifier() {
+    if (typeof this.#identifier !== "string") {
+      throw new TypeError(`Identifier is not specified`)
+    }
+
+    if (document.getElementById(this.#identifier) !== null) {
+      throw new TypeError(`The provided identifier is already in use`)
+    }
   }
 
   /**
@@ -50,7 +72,7 @@ export class BottomSheet {
    * @param {boolean} isShown
    */
   setIsShown(isShown) {
-    this.#sheet.setAttribute("aria-hidden", String(!isShown))
+    this.#sheetWrapper.setAttribute("aria-hidden", String(!isShown))
 
     if (!isShown) {
       this.setHeight(0)
@@ -66,12 +88,12 @@ export class BottomSheet {
     if (typeof value !== "number") return
 
     this.#height = Math.max(0, Math.min(100, value))
-    this.#contents.style.height = `${this.#height}vh`
+    this.#sheet.style.height = `${this.#height}vh`
 
     if (this.#height === 100) {
-      this.#contents.classList.add("fullscreen")
+      this.#sheet.classList.add("fullscreen")
     } else {
-      this.#contents.classList.remove("fullscreen")
+      this.#sheet.classList.remove("fullscreen")
     }
   }
 
@@ -93,7 +115,7 @@ export class BottomSheet {
    */
   #onKeyUp(event) {
     const isSheetElementFocused =
-      this.#sheet.contains(event.target) && isFocused(event.target)
+      this.#sheetWrapper.contains(event.target) && isFocused(event.target)
 
     if (event.key === "Escape" && !isSheetElementFocused && this.options.closeOnEscapeKey) {
       this.setIsShown(false)
@@ -107,7 +129,7 @@ export class BottomSheet {
    */
   #onDragStart(event) {
     this.#dragPosition = touchPosition(event).pageY
-    this.#contents.classList.add(styles.notSelectable)
+    this.#sheet.classList.add(styles.notSelectable)
     this.#draggableArea.style.cursor = document.body.style.cursor = "grabbing"
   }
 
@@ -130,7 +152,7 @@ export class BottomSheet {
    */
   #onDragEnd(event) {
     this.#dragPosition = undefined
-    this.#contents.classList.remove(styles.notSelectable)
+    this.#sheet.classList.remove(styles.notSelectable)
     this.#draggableArea.style.cursor = document.body.style.cursor = ""
 
     if (this.#height < 25) {
@@ -145,9 +167,11 @@ export class BottomSheet {
   /**
    * @param {HTMLElement} contents
    */
-  #wrapContents(contents) {
+  #mount(contents) {
+    this.#validateSheetIdentifier()
+
     const sheet = (
-      <div class={styles.sheet} role="dialog" aria-hidden="true">
+      <div class={styles.sheet} id={this.#identifier} role="dialog" aria-hidden="true">
         <div class={styles.overlay} onClick={this.#onOverlayClick.bind(this)}></div>
         <div class={styles.contents}>
           <header class={styles.controls}>
@@ -159,9 +183,9 @@ export class BottomSheet {
               <div class={styles.draggableThumb}></div>
             </div>
 
-            {/* TODO: set up the aria-controls attribute */}
             <button
               type="button"
+              aria-controls={this.#identifier}
               class={styles.closeSheet}
               onClick={this.#onCloseButtonClick.bind(this)}
               title="Close the sheet"
@@ -174,12 +198,12 @@ export class BottomSheet {
       </div>
     )
 
-    this.#sheet = sheet
-    this.#contents = this.#sheet.querySelector("." + styles.contents)
-    this.#draggableArea = this.#contents.querySelector("." + styles.draggableArea)
+    this.#sheetWrapper = sheet
+    this.#sheet = this.#sheetWrapper.querySelector("." + styles.contents)
+    this.#draggableArea = this.#sheet.querySelector("." + styles.draggableArea)
 
-    const sheetBody = this.#contents.querySelector("." + styles.body)
-    contents.replaceWith(sheet)
+    const sheetBody = this.#sheet.querySelector("." + styles.body)
+    contents.replaceWith(this.#sheetWrapper)
     sheetBody.appendChild(contents)
 
     window.addEventListener("keyup", this.#onKeyUp.bind(this))
