@@ -15,7 +15,7 @@ export default defineConfig({
   build: {
     outDir: resolve(__dirname, "./build/"),
     lib: {
-      entry: resolve(__dirname, "./library/index.js"),
+      entry: resolve(__dirname, "./library/index.jsx"),
       name: "BottomSheet",
       fileName: "index"
     },
