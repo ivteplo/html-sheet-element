@@ -1,4 +1,9 @@
+//
 // Copyright (c) 2022-2023 Ivan Teplov
+// Licensed under the Apache license 2.0
+//
+
+import * as styles from "./sheet.module.css"
 
 /**
  * Check if the element is focused
@@ -70,13 +75,13 @@ export class BottomSheet {
    */
   #wrapContents(contents) {
     const sheet = document.createElement("div")
-    sheet.classList.add("sheet")
+    sheet.classList.add(styles.sheet)
     sheet.setAttribute("role", "dialog")
     sheet.setAttribute("aria-hidden", "true")
     this.#sheet = sheet
 
     const overlay = document.createElement("div")
-    overlay.classList.add("overlay")
+    overlay.classList.add(styles.overlay)
     sheet.appendChild(overlay)
 
     // Hide the sheet when clicking at the background
@@ -87,25 +92,25 @@ export class BottomSheet {
     })
 
     const contentsWrapper = document.createElement("div")
-    contentsWrapper.classList.add("contents")
+    contentsWrapper.classList.add(styles.contents)
     sheet.appendChild(contentsWrapper)
     this.#contents = contentsWrapper
 
     const controlsHeader = document.createElement("header")
-    controlsHeader.classList.add("controls")
+    controlsHeader.classList.add(styles.controls)
     contentsWrapper.appendChild(controlsHeader)
 
     const draggableArea = document.createElement("div")
-    draggableArea.classList.add("draggable-area")
+    draggableArea.classList.add(styles.draggableArea)
     controlsHeader.appendChild(draggableArea)
 
     const draggableThumb = document.createElement("div")
-    draggableThumb.classList.add("draggable-thumb")
+    draggableThumb.classList.add(styles.draggableThumb)
     draggableArea.appendChild(draggableThumb)
 
     // TODO: set up the aria-controls attribute
     const closeButton = document.createElement("button")
-    closeButton.classList.add("close-sheet")
+    closeButton.classList.add(styles.closeSheet)
     closeButton.setAttribute("type", "button")
     closeButton.setAttribute("title", "Close the sheet")
     closeButton.innerHTML = "&times;"
@@ -117,7 +122,7 @@ export class BottomSheet {
     })
 
     const sheetBody = document.createElement("main")
-    sheetBody.classList.add("body")
+    sheetBody.classList.add(styles.body)
     contentsWrapper.appendChild(sheetBody)
 
     contents.replaceWith(sheet)
@@ -138,7 +143,7 @@ export class BottomSheet {
 
     const onDragStart = (event) => {
       dragPosition = touchPosition(event).pageY
-      contentsWrapper.classList.add("not-selectable")
+      contentsWrapper.classList.add(styles.notSelectable)
       draggableArea.style.cursor = document.body.style.cursor = "grabbing"
     }
 
@@ -155,7 +160,7 @@ export class BottomSheet {
 
     const onDragEnd = () => {
       dragPosition = undefined
-      contentsWrapper.classList.remove("not-selectable")
+      contentsWrapper.classList.remove(styles.notSelectable)
       draggableArea.style.cursor = document.body.style.cursor = ""
 
       if (this.#height < 25) {
@@ -177,5 +182,3 @@ export class BottomSheet {
     window.addEventListener("touchend", onDragEnd)
   }
 }
-
-export default BottomSheet

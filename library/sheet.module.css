@@ -1,0 +1,120 @@
+/*
+  Copyright (c) 2022-2023 Ivan Teplov
+  Licensed under the Apache license 2.0
+*/
+
+:root {
+  --bottom-sheet-background: #fff;
+  --bottom-sheet-foreground: #000;
+  --bottom-sheet-overlay-background: #888;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bottom-sheet-background: #000;
+    --bottom-sheet-foreground: #fff;
+  }
+}
+
+.sheet {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 2;
+  visibility: visible;
+  transition: opacity 0.5s, visibility 0.5s;
+}
+
+.sheet[aria-hidden="true"] {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.sheet .overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: -1;
+  background: var(--bottom-sheet-overlay-background);
+  opacity: 0.5;
+}
+
+.sheet .contents {
+  display: flex;
+  flex-direction: column;
+
+  border-radius: 1rem 1rem 0 0;
+
+  background: var(--bottom-sheet-background);
+
+  overflow-y: hidden;
+
+  --default-transitions: transform 0.5s, border-radius 0.5s;
+
+  transition: var(--default-transitions);
+  transform: translateY(0);
+
+  max-width: 70rem;
+  max-height: 100vh;
+  height: 30vh;
+
+  box-sizing: border-box;
+}
+
+.sheet .contents:not(.not-selectable) {
+  transition: var(--default-transitions), height 0.5s;
+}
+
+.sheet .contents.fullscreen {
+  border-radius: 0;
+}
+
+.sheet[aria-hidden="true"] .contents {
+  transform: translateY(100%);
+}
+
+.sheet .controls {
+  display: flex;
+}
+
+.sheet .draggable-area {
+  width: 3rem;
+  margin: auto;
+  padding: 1rem;
+  cursor: grab;
+}
+
+.sheet .draggable-thumb {
+  width: inherit;
+  height: 0.25rem;
+  background: var(--divider);
+  border-radius: 0.125rem;
+}
+
+.sheet .close-sheet {
+  border: none;
+  padding: 0.7rem;
+}
+
+.sheet .body {
+  flex-grow: 1;
+  height: 100%;
+
+  display: flex;
+  flex-direction: column;
+
+  overflow-y: auto;
+
+  padding: 1rem;
+  box-sizing: border-box;
+}
