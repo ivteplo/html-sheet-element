@@ -6,12 +6,15 @@
 const eventHandlerAttributePattern = /^on([A-Z][a-zA-Z]*)$/
 
 /**
- * @param {string} tagName
+ * @template {string} Tag
+ * @param {Tag} tagName
  * @param {Record<string, string|function>} attributes
  * @param {HTMLElement|string|number|bigint} children
+ * @returns {ElementTagNameMap[Tag]|HTMLElement}
  */
 export function createElement(tagName, attributes, ...children) {
   const element = document.createElement(tagName)
+  attributes ??= {}
 
   for (const [attribute, value] of Object.entries(attributes)) {
     const eventHandlerPatternMatches = attribute.match(eventHandlerAttributePattern)

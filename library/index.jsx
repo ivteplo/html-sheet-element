@@ -23,12 +23,31 @@ const touchPosition = (event) =>
   event.touches ? event.touches[0] : event
 
 export class BottomSheet {
+  /** @type {number} */
   #height = 0 // in vh (viewport height)
 
+  /** @type {string} */
   #identifier
+
+  /** @type {HTMLElement} */
   #wrapper
+
+  /** @type {HTMLElement} */
   #sheet
+
+  /** @type {HTMLElement} */
+  #sheetBody
+
+  /** @type {HTMLElement} */
   #draggableArea
+
+  /** Just methods with 'this' binded */
+  #eventListeners = {
+    onDragMove: this.#onDragMove.bind(this),
+    onDragStart: this.#onDragStart.bind(this),
+    onDragEnd: this.#onDragEnd.bind(this),
+    onKeyUp: this.#onKeyUp.bind(this),
+  }
 
   /**
    * @param {string} identifier
@@ -165,12 +184,10 @@ export class BottomSheet {
   }
 
   /**
-   * @param {HTMLElement} contents
+   * @param {HTMLElement} bodyContents
    */
-  #mount(contents) {
+  #mount(bodyContents) {
     this.#validateSheetIdentifier()
-
-    let sheetBody
 
     this.#wrapper = (
       <div class="bottom-sheet-wrapper" id={this.#identifier} role="dialog" aria-hidden="true">
@@ -196,20 +213,46 @@ export class BottomSheet {
               &times;
             </button>
           </header>
-          <main class="bottom-sheet-body" reference={body => sheetBody = body}></main>
+          <main class="bottom-sheet-body" reference={body => this.#sheetBody = body}></main>
         </div>
       </div>
     )
 
-    contents.replaceWith(this.#wrapper)
-    sheetBody.appendChild(contents)
+    bodyContents.replaceWith(this.#wrapper)
+    this.#sheetBody.appendChild(bodyContents)
 
-    window.addEventListener("keyup", this.#onKeyUp.bind(this))
+    window.addEventListener("keyup", this.#eventListeners.onKeyUp)
 
-    window.addEventListener("mousemove", this.#onDragMove.bind(this))
-    window.addEventListener("touchmove", this.#onDragMove.bind(this))
+    window.addEventListener("mousemove", this.#eventListeners.onDragMove)
+    window.addEventListener("touchmove", this.#eventListeners.onDragMove)
 
-    window.addEventListener("mouseup", this.#onDragEnd.bind(this))
-    window.addEventListener("touchend", this.#onDragEnd.bind(this))
+    window.addEventListener("mouseup", this.#eventListeners.onDragEnd)
+    window.addEventListener("touchend", this.#eventListeners.onDragEnd)
+  }
+
+  #unmounted = false
+
+  unmount() {
+    if (this.#unmounted) return;
+    this.#unmounted = true
+
+    /** @type {HTMLElement} */
+    const temporaryReplacement = <div />
+    this.#wrapper.replaceWith(temporaryReplacement)
+
+    for (const child of this.#sheetBody.children) {
+      this.#sheetBody.removeChild(child)
+      temporaryReplacement.parentElement.insertBefore(child, temporaryReplacement.nextSibling)
+    }
+
+    temporaryReplacement.parentElement.removeChild(temporaryReplacement)
+
+    window.removeEventListener("keyup", this.#eventListeners.onKeyUp)
+
+    window.removeEventListener("mousemove", this.#eventListeners.onDragMove)
+    window.removeEventListener("touchmove", this.#eventListeners.onDragMove)
+
+    window.removeEventListener("mouseup", this.#eventListeners.onDragEnd)
+    window.removeEventListener("touchend", this.#eventListeners.onDragEnd)
   }
 }
