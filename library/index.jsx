@@ -26,7 +26,7 @@ export class BottomSheet {
   #height = 0 // in vh (viewport height)
 
   #identifier
-  #sheetWrapper
+  #wrapper
   #sheet
   #draggableArea
 
@@ -72,7 +72,7 @@ export class BottomSheet {
    * @param {boolean} isShown
    */
   setIsShown(isShown) {
-    this.#sheetWrapper.setAttribute("aria-hidden", String(!isShown))
+    this.#wrapper.setAttribute("aria-hidden", String(!isShown))
 
     if (!isShown) {
       this.setHeight(0)
@@ -115,7 +115,7 @@ export class BottomSheet {
    */
   #onKeyUp(event) {
     const isSheetElementFocused =
-      this.#sheetWrapper.contains(event.target) && isFocused(event.target)
+      this.#wrapper.contains(event.target) && isFocused(event.target)
 
     if (event.key === "Escape" && !isSheetElementFocused && this.options.closeOnEscapeKey) {
       this.setIsShown(false)
@@ -172,36 +172,36 @@ export class BottomSheet {
 
     let sheetBody
 
-    this.#sheetWrapper = (
-      <div class="sheet" id={this.#identifier} role="dialog" aria-hidden="true">
-        <div class="overlay" onClick={this.#onOverlayClick.bind(this)}></div>
-        <div class="contents" reference={sheet => this.#sheet = sheet}>
-          <header class="controls">
+    this.#wrapper = (
+      <div class="bottom-sheet-wrapper" id={this.#identifier} role="dialog" aria-hidden="true">
+        <div class="bottom-sheet-overlay" onClick={this.#onOverlayClick.bind(this)}></div>
+        <div class="bottom-sheet" reference={sheet => this.#sheet = sheet}>
+          <header class="bottom-sheet-controls">
             <div
-              class="draggable-area"
+              class="bottom-sheet-draggable-area"
               reference={area => this.#draggableArea = area}
               onMouseDown={this.#onDragStart.bind(this)}
               onTouchStart={this.#onDragStart.bind(this)}
             >
-              <div class="draggable-thumb"></div>
+              <div class="bottom-sheet-draggable-thumb"></div>
             </div>
 
             <button
               type="button"
               aria-controls={this.#identifier}
-              class="close-sheet"
+              class="bottom-sheet-close-button"
               onClick={this.#onCloseButtonClick.bind(this)}
               title="Close the sheet"
             >
               &times;
             </button>
           </header>
-          <main class="body" reference={body => sheetBody = body}></main>
+          <main class="bottom-sheet-body" reference={body => sheetBody = body}></main>
         </div>
       </div>
     )
 
-    contents.replaceWith(this.#sheetWrapper)
+    contents.replaceWith(this.#wrapper)
     sheetBody.appendChild(contents)
 
     window.addEventListener("keyup", this.#onKeyUp.bind(this))

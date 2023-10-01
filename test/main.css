@@ -12,7 +12,6 @@
   --page-background-color: #fff;
   --page-foreground-color: #000;
   --section-divider-color: #eee;
-  --bottom-sheet-background-color: #000;
 }
 
 @media (prefers-color-scheme: dark) {
