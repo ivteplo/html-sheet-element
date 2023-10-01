@@ -19,6 +19,7 @@ export default defineConfig({
       name: "BottomSheet",
       fileName: "index"
     },
+    cssCodeSplit: true,
     rollupOptions: {
       // make sure to externalize deps that shouldn't be bundled
       // into your library

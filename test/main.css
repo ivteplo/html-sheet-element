@@ -9,16 +9,17 @@
 }
 
 :root {
-  --background: #fff;
-  --foreground: #000;
-  --divider: #eee;
+  --page-background-color: #fff;
+  --page-foreground-color: #000;
+  --section-divider-color: #eee;
+  --bottom-sheet-background-color: #000;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #000;
-    --foreground: #fff;
-    --divider: #333;
+    --page-background-color: #000;
+    --page-foreground-color: #fff;
+    --section-divider-color: #333;
   }
 }
 
@@ -28,8 +29,8 @@ body {
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
+  background: var(--page-background-color);
+  color: var(--page-foreground-color);
 
   overflow: hidden;
   line-height: 1.5;
@@ -45,13 +46,13 @@ textarea,
   padding: 1rem;
 
   border-radius: 1rem;
-  border: 0.0625rem solid var(--divider);
+  border: 0.0625rem solid var(--section-divider-color);
 
   font-family: inherit;
   font-size: 1rem;
 
-  background: var(--background);
-  color: var(--foreground);
+  background: var(--page-background-color);
+  color: var(--page-foreground-color);
 }
 
 textarea {

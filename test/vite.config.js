@@ -15,6 +15,7 @@ export default defineConfig({
   },
   build: {
     outDir: resolve(__dirname, "./build/"),
+    cssCodeSplit: true,
     rollupOptions: {
       input: resolve(__dirname, "./index.html")
     }

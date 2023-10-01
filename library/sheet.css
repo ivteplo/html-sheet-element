@@ -4,15 +4,18 @@
 */
 
 :root {
-  --bottom-sheet-background: #fff;
-  --bottom-sheet-foreground: #000;
-  --bottom-sheet-overlay-background: #888;
+  --bottom-sheet-background-color: white;
+  --bottom-sheet-foreground-color: black;
+  --bottom-sheet-overlay-background-color: #88888880;
+  --bottom-sheet-thumb-color: #eeeeee;
+  --bottom-sheet-transition-duration: 0.5s;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --bottom-sheet-background: #000;
-    --bottom-sheet-foreground: #fff;
+    --bottom-sheet-background-color: black;
+    --bottom-sheet-foreground-color: white;
+    --bottom-sheet-thumb-color: #333333;
   }
 }
 
@@ -29,7 +32,9 @@
   bottom: 0;
   z-index: 2;
   visibility: visible;
-  transition: opacity 0.5s, visibility 0.5s;
+  transition:
+    opacity var(--bottom-sheet-transition-duration),
+    visibility var(--bottom-sheet-transition-duration);
 }
 
 .sheet[aria-hidden="true"] {
@@ -45,7 +50,7 @@
   right: 0;
   bottom: 0;
   z-index: -1;
-  background: var(--bottom-sheet-overlay-background);
+  background: var(--bottom-sheet-overlay-background-color);
   opacity: 0.5;
 }
 
@@ -55,11 +60,13 @@
 
   border-radius: 1rem 1rem 0 0;
 
-  background: var(--bottom-sheet-background);
+  background: var(--bottom-sheet-background-color);
 
   overflow-y: hidden;
 
-  --default-transitions: transform 0.5s, border-radius 0.5s;
+  --default-transitions:
+    transform var(--bottom-sheet-transition-duration),
+    border-radius var(--bottom-sheet-transition-duration);
 
   transition: var(--default-transitions);
   transform: translateY(0);
@@ -72,7 +79,9 @@
 }
 
 .sheet .contents:not(.not-selectable) {
-  transition: var(--default-transitions), height 0.5s;
+  transition:
+    var(--default-transitions),
+    height var(--bottom-sheet-transition-duration);
 }
 
 .sheet .contents.fullscreen {
@@ -97,7 +106,7 @@
 .sheet .draggable-thumb {
   width: inherit;
   height: 0.25rem;
-  background: var(--divider);
+  background: var(--bottom-sheet-thumb-color);
   border-radius: 0.125rem;
 }
 

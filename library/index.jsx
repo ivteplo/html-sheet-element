@@ -6,7 +6,7 @@
 /** @jsx createElement */
 
 import { createElement } from "./createElement"
-import * as styles from "./sheet.module.css"
+import "./sheet.css"
 
 /**
  * Check if the element is focused
@@ -129,7 +129,7 @@ export class BottomSheet {
    */
   #onDragStart(event) {
     this.#dragPosition = touchPosition(event).pageY
-    this.#sheet.classList.add(styles.notSelectable)
+    this.#sheet.classList.add("not-selectable")
     this.#draggableArea.style.cursor = document.body.style.cursor = "grabbing"
   }
 
@@ -152,7 +152,7 @@ export class BottomSheet {
    */
   #onDragEnd(event) {
     this.#dragPosition = undefined
-    this.#sheet.classList.remove(styles.notSelectable)
+    this.#sheet.classList.remove("not-selectable")
     this.#draggableArea.style.cursor = document.body.style.cursor = ""
 
     if (this.#height < 25) {
@@ -173,30 +173,30 @@ export class BottomSheet {
     let sheetBody
 
     this.#sheetWrapper = (
-      <div class={styles.sheet} id={this.#identifier} role="dialog" aria-hidden="true">
-        <div class={styles.overlay} onClick={this.#onOverlayClick.bind(this)}></div>
-        <div class={styles.contents} reference={sheet => this.#sheet = sheet}>
-          <header class={styles.controls}>
+      <div class="sheet" id={this.#identifier} role="dialog" aria-hidden="true">
+        <div class="overlay" onClick={this.#onOverlayClick.bind(this)}></div>
+        <div class="contents" reference={sheet => this.#sheet = sheet}>
+          <header class="controls">
             <div
-              class={styles.draggableArea}
+              class="draggable-area"
               reference={area => this.#draggableArea = area}
               onMouseDown={this.#onDragStart.bind(this)}
               onTouchStart={this.#onDragStart.bind(this)}
             >
-              <div class={styles.draggableThumb}></div>
+              <div class="draggable-thumb"></div>
             </div>
 
             <button
               type="button"
               aria-controls={this.#identifier}
-              class={styles.closeSheet}
+              class="close-sheet"
               onClick={this.#onCloseButtonClick.bind(this)}
               title="Close the sheet"
             >
               &times;
             </button>
           </header>
-          <main class={styles.body} reference={body => sheetBody = body}></main>
+          <main class="body" reference={body => sheetBody = body}></main>
         </div>
       </div>
     )
