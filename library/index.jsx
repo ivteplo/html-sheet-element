@@ -23,22 +23,40 @@ const touchPosition = (event) =>
   event.touches ? event.touches[0] : event
 
 export class BottomSheet {
-  /** @type {number} */
-  #height = 0 // in vh (viewport height)
+  /**
+   * Height of the sheet in viewport height units (vh)
+   * @type {number}
+   */
+  #height = 0
 
-  /** @type {string} */
+  /**
+   * DOM identifier of the sheet
+   * @type {string}
+   */
   #identifier
 
-  /** @type {HTMLElement} */
-  #wrapper
+  /**
+   * Body of the sheet (specified in the constructor)
+   * @type {HTMLElement}
+   */
+  #contents
 
-  /** @type {HTMLElement} */
-  #sheet
+  /**
+   * Wrapper of the sheet
+   * @type {HTMLElement|null}
+   */
+  #wrapper = null
 
-  /** @type {HTMLElement} */
-  #sheetBody
+  /**
+   * The sheet itself
+   * @type {HTMLElement|null}
+   */
+  #sheet = null
 
-  /** @type {HTMLElement} */
+  /**
+   * Gray area on the top of the sheet to resize the sheet
+   * @type {HTMLElement}
+   */
   #draggableArea
 
   /** Just methods with 'this' binded */
@@ -47,6 +65,8 @@ export class BottomSheet {
     onDragStart: this.#onDragStart.bind(this),
     onDragEnd: this.#onDragEnd.bind(this),
     onKeyUp: this.#onKeyUp.bind(this),
+    onCloseButtonClick: this.#onCloseButtonClick.bind(this),
+    onOverlayClick: this.#onOverlayClick.bind(this)
   }
 
   /**
@@ -58,14 +78,21 @@ export class BottomSheet {
    */
   constructor(identifier, contents, options = {}) {
     this.#identifier = identifier
+    this.#contents = contents
 
     this.options = {
       closeOnBackgroundClick: true,
       closeOnEscapeKey: true,
       ...options
     }
+  }
 
-    this.#mount(contents)
+  get html() {
+    if (!this.#wrapper) {
+      this.#renderHTML(this.#contents)
+    }
+
+    return this.#wrapper
   }
 
   get id() {
@@ -76,13 +103,17 @@ export class BottomSheet {
     return this.#identifier
   }
 
-  #validateSheetIdentifier() {
+  #validateParameters() {
     if (typeof this.#identifier !== "string") {
       throw new TypeError(`Identifier is not specified`)
     }
 
     if (document.getElementById(this.#identifier) !== null) {
       throw new TypeError(`The provided identifier is already in use`)
+    }
+
+    if (this.#contents?.parentElement !== null) {
+      throw new Error("The contents of the bottom sheet should not be already mounted into the Document Object Model (DOM)")
     }
   }
 
@@ -133,6 +164,10 @@ export class BottomSheet {
    * @param {KeyboardEvent} event
    */
   #onKeyUp(event) {
+    if (!this.#sheet) {
+      return this.#removeWindowEventListeners()
+    }
+
     const isSheetElementFocused =
       this.#wrapper.contains(event.target) && isFocused(event.target)
 
@@ -147,6 +182,10 @@ export class BottomSheet {
    * @param {MouseEvent|TouchEvent} event
    */
   #onDragStart(event) {
+    if (!this.#sheet) {
+      return this.#removeWindowEventListeners()
+    }
+
     this.#dragPosition = touchPosition(event).pageY
     this.#sheet.classList.add("not-selectable")
     this.#draggableArea.style.cursor = document.body.style.cursor = "grabbing"
@@ -156,6 +195,10 @@ export class BottomSheet {
    * @param {MouseEvent|TouchEvent} event
    */
   #onDragMove(event) {
+    if (!this.#sheet) {
+      return this.#removeWindowEventListeners()
+    }
+
     if (this.#dragPosition === undefined) return
 
     const y = touchPosition(event).pageY
@@ -167,9 +210,13 @@ export class BottomSheet {
   }
 
   /**
-   * @param {MouseEvent|TouchEvent} event
+   * @param {MouseEvent|TouchEvent} _event
    */
-  #onDragEnd(event) {
+  #onDragEnd(_event) {
+    if (!this.#sheet) {
+      return this.#removeWindowEventListeners()
+    }
+
     this.#dragPosition = undefined
     this.#sheet.classList.remove("not-selectable")
     this.#draggableArea.style.cursor = document.body.style.cursor = ""
@@ -186,19 +233,19 @@ export class BottomSheet {
   /**
    * @param {HTMLElement} bodyContents
    */
-  #mount(bodyContents) {
-    this.#validateSheetIdentifier()
+  #renderHTML(bodyContents) {
+    this.#validateParameters()
 
     this.#wrapper = (
       <div class="bottom-sheet-wrapper" id={this.#identifier} role="dialog" aria-hidden="true">
-        <div class="bottom-sheet-overlay" onClick={this.#onOverlayClick.bind(this)}></div>
+        <div class="bottom-sheet-overlay" onClick={this.#eventListeners.onOverlayClick}></div>
         <div class="bottom-sheet" reference={sheet => this.#sheet = sheet}>
           <header class="bottom-sheet-controls">
             <div
               class="bottom-sheet-draggable-area"
               reference={area => this.#draggableArea = area}
-              onMouseDown={this.#onDragStart.bind(this)}
-              onTouchStart={this.#onDragStart.bind(this)}
+              onMouseDown={this.#eventListeners.onDragStart}
+              onTouchStart={this.#eventListeners.onDragStart}
             >
               <div class="bottom-sheet-draggable-thumb"></div>
             </div>
@@ -207,19 +254,18 @@ export class BottomSheet {
               type="button"
               aria-controls={this.#identifier}
               class="bottom-sheet-close-button"
-              onClick={this.#onCloseButtonClick.bind(this)}
+              onClick={this.#eventListeners.onCloseButtonClick}
               title="Close the sheet"
             >
               &times;
             </button>
           </header>
-          <main class="bottom-sheet-body" reference={body => this.#sheetBody = body}></main>
+          <main class="bottom-sheet-body">
+            {bodyContents}
+          </main>
         </div>
       </div>
     )
-
-    bodyContents.replaceWith(this.#wrapper)
-    this.#sheetBody.appendChild(bodyContents)
 
     window.addEventListener("keyup", this.#eventListeners.onKeyUp)
 
@@ -230,23 +276,7 @@ export class BottomSheet {
     window.addEventListener("touchend", this.#eventListeners.onDragEnd)
   }
 
-  #unmounted = false
-
-  unmount() {
-    if (this.#unmounted) return;
-    this.#unmounted = true
-
-    /** @type {HTMLElement} */
-    const temporaryReplacement = <div />
-    this.#wrapper.replaceWith(temporaryReplacement)
-
-    for (const child of this.#sheetBody.children) {
-      this.#sheetBody.removeChild(child)
-      temporaryReplacement.parentElement.insertBefore(child, temporaryReplacement.nextSibling)
-    }
-
-    temporaryReplacement.parentElement.removeChild(temporaryReplacement)
-
+  #removeWindowEventListeners() {
     window.removeEventListener("keyup", this.#eventListeners.onKeyUp)
 
     window.removeEventListener("mousemove", this.#eventListeners.onDragMove)

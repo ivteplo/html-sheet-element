@@ -6,8 +6,12 @@
 import { BottomSheet } from "../library/index"
 
 const openSheetButton = document.getElementById("open-sheet")
-const sheetBody = document.getElementById("sheet-body")
+const sheetBodyTemplate = document.getElementById("sheet-body-template")
+const sheetBody = document.createElement("div")
+sheetBody.append(sheetBodyTemplate.content.cloneNode(true))
+
 const sheet = new BottomSheet("sheet", sheetBody)
+document.body.appendChild(sheet.html)
 
 /*
   // Currently, aria-controls in written directly in HTML,
