@@ -5,6 +5,8 @@
 
 /** @jsx createElement */
 
+/** @module BottomSheet */
+
 import { createElement } from "./createElement"
 import "./sheet.css"
 
@@ -22,6 +24,9 @@ const isFocused = element => document.activeElement === element
 const touchPosition = (event) =>
   event.touches ? event.touches[0] : event
 
+/**
+ * @alias BottomSheet
+ */
 export class BottomSheet {
   /**
    * Height of the sheet in viewport height units (vh)
@@ -85,8 +90,14 @@ export class BottomSheet {
       closeOnEscapeKey: true,
       ...options
     }
+
+    this.#validateParameters()
   }
 
+  /**
+   * Get the document object model (DOM) representation of the sheet
+   * @returns {HTMLElement}
+   */
   get html() {
     if (!this.#wrapper) {
       this.#renderHTML(this.#contents)
@@ -95,10 +106,19 @@ export class BottomSheet {
     return this.#wrapper
   }
 
+  /**
+   * Get the identifier of the sheet
+   * @returns {string}
+   */
   get id() {
     return this.#identifier
   }
 
+  /**
+   * Get the identifier of the sheet
+   * @alias id
+   * @returns {string}
+   */
   get identifier() {
     return this.#identifier
   }
@@ -147,14 +167,18 @@ export class BottomSheet {
     }
   }
 
-  // Hide the sheet when clicking at the background
+  /**
+   * Hide the sheet when clicking at the background
+   */
   #onOverlayClick() {
     if (this.options.closeOnBackgroundClick) {
       this.setIsShown(false)
     }
   }
 
-  // Hide the sheet when clicking at the 'close' button
+  /**
+   * Hide the sheet when clicking at the 'close' button
+   */
   #onCloseButtonClick() {
     this.setIsShown(false)
   }
@@ -286,3 +310,5 @@ export class BottomSheet {
     window.removeEventListener("touchend", this.#eventListeners.onDragEnd)
   }
 }
+
+export default BottomSheet

@@ -4,9 +4,10 @@
   "author": "Ivan Teplov <iteplov7@gmail.com>",
   "license": "Apache-2.0",
   "version": "1.0.0",
-
   "type": "module",
-  "files": ["build"],
+  "files": [
+    "build"
+  ],
   "main": "./build/index.umd.cjs",
   "module": "./build/index.js",
   "style": "./build/index.css",
@@ -17,16 +18,13 @@
     },
     "./index.css": "./build/index.css"
   },
-
   "scripts": {
     "dev": "vite --config test/vite.config.js",
     "build": "vite build"
   },
-
   "devDependencies": {
     "vite": "^4.3.0"
   },
-
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ivteplo/bottom-sheet.git"
