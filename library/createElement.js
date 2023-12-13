@@ -23,7 +23,7 @@ export function createElement(tagName, attributes, ...children) {
       const event = eventHandlerPatternMatches[1].toLowerCase()
       element.addEventListener(event, value)
     } else if (attribute === "reference") {
-      value(element)
+      value?.(element)
     } else {
       element.setAttribute(attribute, value)
     }
