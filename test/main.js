@@ -3,7 +3,7 @@
 // Licensed under the Apache license 2.0
 //
 
-import { BottomSheet } from "../library/index"
+import { BottomSheet } from "../library/sheet"
 
 const openSheetButton = document.getElementById("open-sheet")
 const sheetBodyTemplate = document.getElementById("sheet-body-template")
