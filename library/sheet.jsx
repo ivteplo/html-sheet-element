@@ -7,6 +7,7 @@
 
 /** @module BottomSheet */
 
+import { BottomSheetDisplayStateChangeObserver } from "./displayStateChangeObserver"
 import { createElement } from "./createElement"
 import "./sheet.css"
 
@@ -23,6 +24,9 @@ const isFocused = element => document.activeElement === element
  */
 const touchPosition = (event) =>
   event.touches ? event.touches[0] : event
+
+
+const sheetDisplayStateChangeObserver = new BottomSheetDisplayStateChangeObserver()
 
 /**
  * @alias BottomSheet
@@ -125,11 +129,11 @@ export class BottomSheet {
 
   #validateParameters() {
     if (typeof this.#identifier !== "string") {
-      throw new TypeError(`Identifier is not specified`)
+      throw new TypeError("Identifier is not specified")
     }
 
     if (document.getElementById(this.#identifier) !== null) {
-      throw new TypeError(`The provided identifier is already in use`)
+      throw new TypeError(`The provided identifier ${this.#identifier} is already in use`)
     }
 
     if (this.#contents?.parentElement !== null) {
@@ -165,6 +169,15 @@ export class BottomSheet {
     } else {
       this.#sheet.classList.remove("fullscreen")
     }
+  }
+
+  /**
+   * Add event listener to the sheet
+   * @param {"hide"|"show"|string} event
+   * @param {(event: Event) => any} callback
+   */
+  addEventListener(event, callback) {
+    this.html.addEventListener(event, callback)
   }
 
   /**
@@ -291,6 +304,11 @@ export class BottomSheet {
       </div>
     )
 
+    sheetDisplayStateChangeObserver.observe(this.#wrapper, {
+      attributes: true,
+      attributeFilter: ["aria-hidden"]
+    })
+
     window.addEventListener("keyup", this.#eventListeners.onKeyUp)
 
     window.addEventListener("mousemove", this.#eventListeners.onDragMove)
@@ -301,6 +319,8 @@ export class BottomSheet {
   }
 
   #removeWindowEventListeners() {
+    sheetDisplayStateChangeObserver.handleChangesAndDisconnect(this.#wrapper)
+
     window.removeEventListener("keyup", this.#eventListeners.onKeyUp)
 
     window.removeEventListener("mousemove", this.#eventListeners.onDragMove)

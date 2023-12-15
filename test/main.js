@@ -22,3 +22,11 @@ document.body.appendChild(sheet.html)
 openSheetButton.addEventListener("click", () => {
   sheet.setIsShown(true)
 })
+
+sheet.addEventListener("hide", () => {
+  console.log("The sheet has been hidden")
+})
+
+sheet.addEventListener("show", () => {
+  console.log("The sheet has been shown")
+})
