@@ -14,8 +14,10 @@ export default defineConfig({
   },
   build: {
     outDir: resolve(__dirname, "./build/"),
+    minify: false,
+    cssMinify: false,
     lib: {
-      entry: resolve(__dirname, "./library/sheet.jsx"),
+      entry: resolve(__dirname, "./library/index.js"),
       name: "BottomSheet",
       fileName: "index"
     },

@@ -5,8 +5,6 @@
 
 /** @jsx createElement */
 
-/** @module BottomSheet */
-
 import { BottomSheetDisplayStateChangeObserver } from "./displayStateChangeObserver"
 import { createElement } from "./createElement"
 import "./sheet.css"
@@ -30,7 +28,15 @@ const touchPosition = (event) =>
 const sheetDisplayStateChangeObserver = new BottomSheetDisplayStateChangeObserver()
 
 /**
- * @alias BottomSheet
+ * @example Create a sheet from a template
+ * // for instance, you store your sheet contents inside of <template id="sheet-body-template">...</template>
+ * const bodyTemplate = document.querySelector("template#sheet-body-template")
+ *
+ * const body = document.createElement("div")
+ * body.appendChild(bodyTemplate.content.cloneNode(true))
+ *
+ * const bottomSheet = new BottomSheet("sheet", body)
+ * bottomSheet.setIsShown(true)
  */
 export class BottomSheet {
   /**
@@ -147,9 +153,14 @@ export class BottomSheet {
   }
 
   /**
-   * Method to hide or show the sheet
+   * Hide or show the sheet
    * @param {boolean} isShown
    * @returns {void}
+   * @example Hide the sheet
+   * sheet.setIsShown(false)
+   *
+   * @example Show the sheet
+   * sheet.setIsShown(true)
    */
   setIsShown(isShown) {
     this.#wrapper.setAttribute("aria-hidden", String(!isShown))
@@ -165,6 +176,9 @@ export class BottomSheet {
    * Set the height of the sheet
    * @param {number} value - height in vh (viewport height)
    * @returns {void}
+   *
+   * @example Make the sheet go fullscreen
+   * sheet.setHeight(100)
    */
   setHeight(value) {
     if (typeof value !== "number") return
@@ -182,8 +196,21 @@ export class BottomSheet {
   /**
    * Add event listener to the sheet
    * @param {"hide"|"show"|string} event
-   * @param {(event: Event) => any} callback
+   * @param {EventListener} callback
    * @returns {void}
+   * @example Run a function when the sheet gets shown or hidden
+   * sheet.addEventListener("hide", () => {
+   *   console.log("The sheet is now hidden")
+   * })
+   *
+   * sheet.addEventListener("show", () => {
+   *   console.log("The sheet is now shown")
+   * })
+   *
+   * @example Alternative expression
+   * sheet.html.addEventListener("...", () => {
+   *   // ...
+   * })
    */
   addEventListener(event, callback) {
     this.html.addEventListener(event, callback)
