@@ -14,6 +14,7 @@ import "./sheet.css"
 /**
  * Check if the element is focused
  * @param {HTMLElement}
+ * @returns {boolean}
  */
 const isFocused = element => document.activeElement === element
 
@@ -127,6 +128,10 @@ export class BottomSheet {
     return this.#identifier
   }
 
+  /**
+   * Check whether the parameters provided in the constructor are all valid
+   * @throws {Error|TypeError}
+   */
   #validateParameters() {
     if (typeof this.#identifier !== "string") {
       throw new TypeError("Identifier is not specified")
@@ -144,6 +149,7 @@ export class BottomSheet {
   /**
    * Method to hide or show the sheet
    * @param {boolean} isShown
+   * @returns {void}
    */
   setIsShown(isShown) {
     this.#wrapper.setAttribute("aria-hidden", String(!isShown))
@@ -156,7 +162,9 @@ export class BottomSheet {
   }
 
   /**
+   * Set the height of the sheet
    * @param {number} value - height in vh (viewport height)
+   * @returns {void}
    */
   setHeight(value) {
     if (typeof value !== "number") return
@@ -175,6 +183,7 @@ export class BottomSheet {
    * Add event listener to the sheet
    * @param {"hide"|"show"|string} event
    * @param {(event: Event) => any} callback
+   * @returns {void}
    */
   addEventListener(event, callback) {
     this.html.addEventListener(event, callback)
@@ -182,6 +191,7 @@ export class BottomSheet {
 
   /**
    * Hide the sheet when clicking at the background
+   * @returns {void}
    */
   #onOverlayClick() {
     if (this.options.closeOnBackgroundClick) {
@@ -191,6 +201,7 @@ export class BottomSheet {
 
   /**
    * Hide the sheet when clicking at the 'close' button
+   * @returns {void}
    */
   #onCloseButtonClick() {
     this.setIsShown(false)
@@ -199,10 +210,12 @@ export class BottomSheet {
   /**
    * Hide the sheet when pressing Escape if the target element is not an input field
    * @param {KeyboardEvent} event
+   * @returns {void}
    */
   #onKeyUp(event) {
     if (!this.#sheet) {
-      return this.#removeWindowEventListeners()
+      this.#removeWindowEventListeners()
+      return
     }
 
     const isSheetElementFocused =
@@ -216,11 +229,14 @@ export class BottomSheet {
   #dragPosition
 
   /**
+   * Gets called when the user starts grabbing the 'sheet thumb'
    * @param {MouseEvent|TouchEvent} event
+   * @returns {void}
    */
   #onDragStart(event) {
     if (!this.#sheet) {
-      return this.#removeWindowEventListeners()
+      this.#removeWindowEventListeners()
+      return
     }
 
     this.#dragPosition = touchPosition(event).pageY
@@ -229,11 +245,15 @@ export class BottomSheet {
   }
 
   /**
+   * Gets called when the user is moving the 'sheet thumb'.
+   * Updates the height of the sheet
    * @param {MouseEvent|TouchEvent} event
+   * @returns {void}
    */
   #onDragMove(event) {
     if (!this.#sheet) {
-      return this.#removeWindowEventListeners()
+      this.#removeWindowEventListeners()
+      return
     }
 
     if (this.#dragPosition === undefined) return
@@ -247,11 +267,14 @@ export class BottomSheet {
   }
 
   /**
+   * Get called when the user stops grabbing the sheet
    * @param {MouseEvent|TouchEvent} _event
+   * @returns {void}
    */
   #onDragEnd(_event) {
     if (!this.#sheet) {
-      return this.#removeWindowEventListeners()
+      this.#removeWindowEventListeners()
+      return
     }
 
     this.#dragPosition = undefined
@@ -268,7 +291,10 @@ export class BottomSheet {
   }
 
   /**
+   * Renders the sheet and saves its HTML into the `#wrapper` property.
+   * Can throw an error if the constructor parameters are invalid
    * @param {HTMLElement} bodyContents
+   * @returns {void}
    */
   #renderHTML(bodyContents) {
     this.#validateParameters()
@@ -318,6 +344,9 @@ export class BottomSheet {
     window.addEventListener("touchend", this.#eventListeners.onDragEnd)
   }
 
+  /**
+   * Removes all the event listeners when the sheet is no longer mounted
+   */
   #removeWindowEventListeners() {
     sheetDisplayStateChangeObserver.handleChangesAndDisconnect(this.#wrapper)
 
