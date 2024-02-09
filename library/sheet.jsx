@@ -99,12 +99,14 @@ export class SheetElement extends HTMLElement {
 
   showModal() {
     this.setAttribute("open", true)
+    this.dispatchEvent(new CustomEvent("show"))
   }
 
   show = this.showModal
 
   close() {
     this.removeAttribute("open")
+    this.dispatchEvent(new CustomEvent("close"))
   }
 
   /**

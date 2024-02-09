@@ -12,8 +12,8 @@ openSheetButton.addEventListener("click", () => {
   sheet.showModal()
 })
 
-sheet.addEventListener("hide", () => {
-  console.log("The sheet has been hidden")
+sheet.addEventListener("close", () => {
+  console.log("The sheet has been closed")
 })
 
 sheet.addEventListener("show", () => {
