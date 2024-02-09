@@ -17,7 +17,7 @@ export default defineConfig({
     minify: false,
     cssMinify: false,
     lib: {
-      entry: resolve(__dirname, "./library/index.js"),
+      entry: resolve(__dirname, "./library/sheet.jsx"),
       name: "BottomSheet",
       fileName: "index"
     },
