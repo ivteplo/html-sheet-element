@@ -85,10 +85,21 @@ export class SheetElement extends HTMLElement {
     this.addEventListener("click", this.#onClick)
   }
 
+  /**
+   * Check if the sheet is open
+   * @returns {boolean}
+   */
   get open() {
     return this.getAttribute("open")
   }
 
+  /**
+   * An alternative way to open or close the sheet
+   * @param {boolean} value
+   * @example
+   * sheet.open = true  // the same as executing sheet.showModal()
+   * sheet.open = false // the same as executing sheet.close()
+   */
   set open(value) {
     if (value === false || value === undefined) {
       this.close()
@@ -97,13 +108,22 @@ export class SheetElement extends HTMLElement {
     }
   }
 
+  /**
+   * Open the sheet
+   */
   showModal() {
     this.setAttribute("open", true)
     this.dispatchEvent(new CustomEvent("show"))
   }
 
+  /**
+   * Open the sheet
+   */
   show = this.showModal
 
+  /**
+   * Collapse the sheet
+   */
   close() {
     this.removeAttribute("open")
     this.dispatchEvent(new CustomEvent("close"))
@@ -177,10 +197,11 @@ export class SheetElement extends HTMLElement {
     this.#scaleDownTo = +getCSSVariableValue(this.#sheet, "--scale-down-to")
   }
 
+  /**
+   * Distance from the cursor to the bottom of the sheet in percents (relative to the sheet height)
+   */
   #getDistanceToTheBottomInPercents(y) {
     const deltaY = this.#dragPosition - y
-
-    // Distance to the bottom of the sheet to the cursor in percents (relative to the sheet height)
     const distanceToTheBottomInPercents = 100 + deltaY / this.#sheet.clientHeight * 100
     return Math.max(0, Math.min(100, distanceToTheBottomInPercents))
   }
@@ -205,7 +226,6 @@ export class SheetElement extends HTMLElement {
   #onDragEnd(event) {
     if (this.#dragPosition === undefined) return
 
-    // Distance to the bottom of the sheet to the cursor in percents (relative to the sheet height)
     const distanceToTheBottomInPercents =
       this.#getDistanceToTheBottomInPercents(touchPosition(event).pageY)
 
