@@ -12,6 +12,7 @@ styleSheet.replaceSync(`
     --sheet-background-color: #fff;
     --sheet-thumb-color: #eee;
     --sheet-transition-duration: 0.5s;
+    --sheet-border-radius: 1rem;
 
     display: flex;
     flex-direction: column;
@@ -65,7 +66,7 @@ styleSheet.replaceSync(`
     display: flex;
     flex-direction: column;
 
-    border-radius: 1rem 1rem 0 0;
+    border-radius: var(--sheet-border-radius) var(--sheet-border-radius) 0 0;
 
     background: var(--sheet-background-color);
 
@@ -134,5 +135,27 @@ styleSheet.replaceSync(`
     padding: 1rem;
     box-sizing: border-box;
   }
+
+  /* tablet */
+  @media (min-width: 48rem) {
+    :host {
+      justify-content: center;
+    }
+
+    .sheet-contents {
+      max-width: 48rem;
+      max-height: 32rem;
+      border-radius: var(--sheet-border-radius);
+    }
+
+    .sheet-draggable-area {
+      display: none;
+    }
+
+    .sheet-controls {
+      justify-content: flex-end;
+    }
+  }
+
 `)
 
