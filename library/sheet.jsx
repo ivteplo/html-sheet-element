@@ -5,7 +5,7 @@
 
 /** @jsx createElement */
 
-import { isFocused, touchPosition, getCSSVariableValue, mapNumber, createElement } from "./helpers"
+import { isFocused, touchPosition, getCSSVariableValue, mapNumber, createElement, elementContains } from "./helpers"
 import { styleSheet } from "./styleSheet"
 
 export class SheetElement extends HTMLElement {
@@ -40,6 +40,8 @@ export class SheetElement extends HTMLElement {
    */
   constructor(options = {}) {
     super()
+
+    this.role = "dialog"
 
     this.options = {
       closeOnBackgroundClick: true,
@@ -129,20 +131,14 @@ export class SheetElement extends HTMLElement {
   }
 
   /**
-   * Method that combines HTMLElement.contains and HTMLElement.shadowRoot.contains
-   * @param {HTMLElement} element
-   */
-  #contains(element) {
-    return this.contains(element) || this.shadowRoot.contains(element)
-  }
-
-  /**
    * Hide the sheet when clicking at the background
    * @param {PointerEvent} event
    * @returns {void}
    */
   #onClick(event) {
-    if (!this.#contains(event.target) && this.options.closeOnBackgroundClick) {
+    const path = event.composedPath()
+
+    if (!path.find(item => item === this.#sheet) && this.options.closeOnBackgroundClick) {
       this.close()
     }
   }
@@ -162,7 +158,7 @@ export class SheetElement extends HTMLElement {
    */
   #onKeyUp(event) {
     const isSheetElementFocused =
-      this.#contains(event.target) && isFocused(event.target)
+      elementContains(event.target, this) && isFocused(event.target)
 
     if (event.key === "Escape" && !isSheetElementFocused && this.options.closeOnEscapeKey) {
       this.close()

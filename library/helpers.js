@@ -45,6 +45,16 @@ export function getCSSVariableValue(element, variableName) {
   return getComputedStyle(element).getPropertyValue(variableName)
 }
 
+/**
+ * Check if the element (or its shadow root) contains the child
+ * @param {HTMLElement} child
+ * @param {HTMLElement} element
+ * @returns {boolean}
+ */
+export function elementContains(child, element) {
+  return element.contains(child) || element.shadowRoot?.contains(child)
+}
+
 
 const eventHandlerAttributePattern = /^on([A-Z][a-zA-Z]*)$/
 
