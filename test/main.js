@@ -3,7 +3,10 @@
 // Licensed under the Apache license 2.0
 //
 
-import "../library/sheet"
+import SheetElement from "../library/sheet"
+
+
+customElements.define("sheet-element", SheetElement)
 
 const openSheetButton = document.getElementById("open-sheet")
 const sheet = document.getElementById("sheet")

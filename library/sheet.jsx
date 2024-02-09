@@ -270,6 +270,3 @@ export class SheetElement extends HTMLElement {
 
 export default SheetElement
 
-// TODO: decide on the component name
-customElements.define("sheet-element", SheetElement)
-
