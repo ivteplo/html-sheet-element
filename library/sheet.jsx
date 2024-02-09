@@ -1,79 +1,28 @@
 //
-// Copyright (c) 2022-2023 Ivan Teplov
+// Copyright (c) 2022-2024 Ivan Teplov
 // Licensed under the Apache license 2.0
 //
 
 /** @jsx createElement */
 
-import { BottomSheetDisplayStateChangeObserver } from "./displayStateChangeObserver"
+import { isFocused, touchPosition, getCSSVariableValue, mapNumber } from "./helpers"
 import { createElement } from "./createElement"
-import "./sheet.css"
+import { styleSheet } from "./styleSheet"
 
-/**
- * Check if the element is focused
- * @param {HTMLElement}
- * @returns {boolean}
- */
-const isFocused = element => document.activeElement === element
-
-/**
- * Get object that contains touch position (depending on event type)
- * @param {MouseEvent|TouchEvent} event
- * @returns {MouseEvent|Touch}
- */
-const touchPosition = (event) =>
-  event.touches ? event.touches[0] : event
-
-
-const sheetDisplayStateChangeObserver = new BottomSheetDisplayStateChangeObserver()
-
-/**
- * @example Create a sheet from a template
- * // for instance, you store your sheet contents inside of <template id="sheet-body-template">...</template>
- * const bodyTemplate = document.querySelector("template#sheet-body-template")
- *
- * const body = document.createElement("div")
- * body.appendChild(bodyTemplate.content.cloneNode(true))
- *
- * const bottomSheet = new BottomSheet("sheet", body)
- * bottomSheet.setIsShown(true)
- */
-export class BottomSheet {
+export class SheetElement extends HTMLElement {
   /**
-   * Height of the sheet in viewport height units (vh)
-   * @type {number}
+   * Inner wrapper
+   * @type {HTMLDivElement}
    */
-  #height = 0
-
-  /**
-   * DOM identifier of the sheet
-   * @type {string}
-   */
-  #identifier
-
-  /**
-   * Body of the sheet (specified in the constructor)
-   * @type {HTMLElement}
-   */
-  #contents
-
-  /**
-   * Wrapper of the sheet
-   * @type {HTMLElement|null}
-   */
-  #wrapper = null
-
-  /**
-   * The sheet itself
-   * @type {HTMLElement|null}
-   */
-  #sheet = null
+  #sheet
 
   /**
    * Gray area on the top of the sheet to resize the sheet
    * @type {HTMLElement}
    */
   #draggableArea
+
+  #scaleDownTo
 
   /** Just methods with 'this' binded */
   #eventListeners = {
@@ -82,19 +31,16 @@ export class BottomSheet {
     onDragEnd: this.#onDragEnd.bind(this),
     onKeyUp: this.#onKeyUp.bind(this),
     onCloseButtonClick: this.#onCloseButtonClick.bind(this),
-    onOverlayClick: this.#onOverlayClick.bind(this)
+    onClick: this.#onClick.bind(this)
   }
 
   /**
-   * @param {string} identifier
-   * @param {HTMLElement} contents
    * @param {object} options
    * @param {boolean?} options.closeOnBackgroundClick
    * @param {boolean?} options.closeOnEscapeKey
    */
-  constructor(identifier, contents, options = {}) {
-    this.#identifier = identifier
-    this.#contents = contents
+  constructor(options = {}) {
+    super()
 
     this.options = {
       closeOnBackgroundClick: true,
@@ -102,127 +48,81 @@ export class BottomSheet {
       ...options
     }
 
-    this.#validateParameters()
+    const shadowRoot = this.attachShadow({
+      mode: "open"
+    })
+
+    shadowRoot.adoptedStyleSheets = [styleSheet]
+
+    shadowRoot.append(
+      <div class="sheet-contents" reference={sheet => this.#sheet = sheet}>
+        <header class="sheet-controls">
+          <div
+            class="sheet-draggable-area"
+            reference={area => this.#draggableArea = area}
+            onMouseDown={this.#eventListeners.onDragStart}
+            onTouchStart={this.#eventListeners.onDragStart}
+          >
+            <div class="sheet-draggable-thumb"></div>
+          </div>
+
+          <button
+            type="button"
+            aria-controls={this?.id ?? ""}
+            class="sheet-close-button"
+            onClick={this.#eventListeners.onCloseButtonClick}
+            title="Close the sheet"
+          >
+            &times;
+          </button>
+        </header>
+        <main class="sheet-body">
+          <slot />
+        </main>
+      </div>
+    )
+
+    this.addEventListener("click", this.#onClick)
   }
 
-  /**
-   * Get the document object model (DOM) representation of the sheet
-   * @returns {HTMLElement}
-   */
-  get html() {
-    if (!this.#wrapper) {
-      this.#renderHTML(this.#contents)
-    }
-
-    return this.#wrapper
+  get open() {
+    return this.getAttribute("open")
   }
 
-  /**
-   * Get the identifier of the sheet
-   * @returns {string}
-   */
-  get id() {
-    return this.#identifier
-  }
-
-  /**
-   * Get the identifier of the sheet
-   * @alias id
-   * @returns {string}
-   */
-  get identifier() {
-    return this.#identifier
-  }
-
-  /**
-   * Check whether the parameters provided in the constructor are all valid
-   * @throws {Error|TypeError}
-   */
-  #validateParameters() {
-    if (typeof this.#identifier !== "string") {
-      throw new TypeError("Identifier is not specified")
-    }
-
-    if (document.getElementById(this.#identifier) !== null) {
-      throw new TypeError(`The provided identifier ${this.#identifier} is already in use`)
-    }
-
-    if (this.#contents?.parentElement !== null) {
-      throw new Error("The contents of the bottom sheet should not be already mounted into the Document Object Model (DOM)")
-    }
-  }
-
-  /**
-   * Hide or show the sheet
-   * @param {boolean} isShown
-   * @returns {void}
-   * @example Hide the sheet
-   * sheet.setIsShown(false)
-   *
-   * @example Show the sheet
-   * sheet.setIsShown(true)
-   */
-  setIsShown(isShown) {
-    this.#wrapper.setAttribute("aria-hidden", String(!isShown))
-
-    if (!isShown) {
-      this.setHeight(0)
+  set open(value) {
+    if (value === false || value === undefined) {
+      this.close()
     } else {
-      this.setHeight(50)
+      this.showModal()
     }
   }
 
-  /**
-   * Set the height of the sheet
-   * @param {number} value - height in vh (viewport height)
-   * @returns {void}
-   *
-   * @example Make the sheet go fullscreen
-   * sheet.setHeight(100)
-   */
-  setHeight(value) {
-    if (typeof value !== "number") return
+  showModal() {
+    this.setAttribute("open", true)
+  }
 
-    this.#height = Math.max(0, Math.min(100, value))
-    this.#sheet.style.height = `${this.#height}vh`
+  show = this.showModal
 
-    if (this.#height === 100) {
-      this.#sheet.classList.add("fullscreen")
-    } else {
-      this.#sheet.classList.remove("fullscreen")
-    }
+  close() {
+    this.removeAttribute("open")
   }
 
   /**
-   * Add event listener to the sheet
-   * @param {"hide"|"show"|string} event
-   * @param {EventListener} callback
-   * @returns {void}
-   * @example Run a function when the sheet gets shown or hidden
-   * sheet.addEventListener("hide", () => {
-   *   console.log("The sheet is now hidden")
-   * })
-   *
-   * sheet.addEventListener("show", () => {
-   *   console.log("The sheet is now shown")
-   * })
-   *
-   * @example Alternative expression
-   * sheet.html.addEventListener("...", () => {
-   *   // ...
-   * })
+   * Method that combines HTMLElement.contains and HTMLElement.shadowRoot.contains
+   * @param {HTMLElement} element
    */
-  addEventListener(event, callback) {
-    this.html.addEventListener(event, callback)
+  #contains(element) {
+    return this.contains(element) || this.shadowRoot.contains(element)
   }
 
   /**
    * Hide the sheet when clicking at the background
+   * @param {PointerEvent} event
    * @returns {void}
    */
-  #onOverlayClick() {
-    if (this.options.closeOnBackgroundClick) {
-      this.setIsShown(false)
+  #onClick(event) {
+    if (!this.#contains(event.target) && this.options.closeOnBackgroundClick) {
+      this.close()
     }
   }
 
@@ -231,7 +131,7 @@ export class BottomSheet {
    * @returns {void}
    */
   #onCloseButtonClick() {
-    this.setIsShown(false)
+    this.close()
   }
 
   /**
@@ -240,20 +140,27 @@ export class BottomSheet {
    * @returns {void}
    */
   #onKeyUp(event) {
-    if (!this.#sheet) {
-      this.#removeWindowEventListeners()
-      return
-    }
-
     const isSheetElementFocused =
-      this.#wrapper.contains(event.target) && isFocused(event.target)
+      this.#contains(event.target) && isFocused(event.target)
 
     if (event.key === "Escape" && !isSheetElementFocused && this.options.closeOnEscapeKey) {
-      this.setIsShown(false)
+      this.close()
     }
   }
 
   #dragPosition
+
+  /**
+   * Function that changes sheet's size and location during the dragging process
+   * @param {number} distanceToTheBottomInPercents - percents relative to the height of the sheet
+   */
+  #dragSheet(distanceToTheBottomInPercents) {
+    const translateY = 100 - distanceToTheBottomInPercents
+    const scale = mapNumber(distanceToTheBottomInPercents, [0, 100], [this.#scaleDownTo, 1])
+
+    this.#sheet.style.transform = `translateY(${translateY}%) scale(${scale})`
+    this.#sheet.style.transition = "none"
+  }
 
   /**
    * Gets called when the user starts grabbing the 'sheet thumb'
@@ -261,14 +168,19 @@ export class BottomSheet {
    * @returns {void}
    */
   #onDragStart(event) {
-    if (!this.#sheet) {
-      this.#removeWindowEventListeners()
-      return
-    }
-
     this.#dragPosition = touchPosition(event).pageY
-    this.#sheet.classList.add("not-selectable")
+    this.#sheet.classList.add("is-resized")
     this.#draggableArea.style.cursor = document.body.style.cursor = "grabbing"
+
+    this.#scaleDownTo = +getCSSVariableValue(this.#sheet, "--scale-down-to")
+  }
+
+  #getDistanceToTheBottomInPercents(y) {
+    const deltaY = this.#dragPosition - y
+
+    // Distance to the bottom of the sheet to the cursor in percents (relative to the sheet height)
+    const distanceToTheBottomInPercents = 100 + deltaY / this.#sheet.clientHeight * 100
+    return Math.max(0, Math.min(100, distanceToTheBottomInPercents))
   }
 
   /**
@@ -278,90 +190,40 @@ export class BottomSheet {
    * @returns {void}
    */
   #onDragMove(event) {
-    if (!this.#sheet) {
-      this.#removeWindowEventListeners()
-      return
-    }
-
     if (this.#dragPosition === undefined) return
 
-    const y = touchPosition(event).pageY
-    const deltaY = this.#dragPosition - y
-    const deltaHeight = deltaY / window.innerHeight * 100
-
-    this.setHeight(this.#height + deltaHeight)
-    this.#dragPosition = y
+    this.#dragSheet(this.#getDistanceToTheBottomInPercents(touchPosition(event).pageY))
   }
 
   /**
    * Get called when the user stops grabbing the sheet
-   * @param {MouseEvent|TouchEvent} _event
+   * @param {MouseEvent|TouchEvent} event
    * @returns {void}
    */
-  #onDragEnd(_event) {
-    if (!this.#sheet) {
-      this.#removeWindowEventListeners()
-      return
+  #onDragEnd(event) {
+    if (this.#dragPosition === undefined) return
+
+    // Distance to the bottom of the sheet to the cursor in percents (relative to the sheet height)
+    const distanceToTheBottomInPercents =
+      this.#getDistanceToTheBottomInPercents(touchPosition(event).pageY)
+
+    if (distanceToTheBottomInPercents < 75) {
+      this.close()
     }
 
-    this.#dragPosition = undefined
-    this.#sheet.classList.remove("not-selectable")
     this.#draggableArea.style.cursor = document.body.style.cursor = ""
+    this.#dragPosition = undefined
 
-    if (this.#height < 25) {
-      this.setIsShown(false)
-    } else if (this.#height > 75) {
-      this.setHeight(100)
-    } else {
-      this.setHeight(50)
-    }
+    this.#sheet.classList.remove("is-resized")
+
+    this.#sheet.style.transform = ""
+    this.#sheet.style.transition = ""
   }
 
   /**
-   * Renders the sheet and saves its HTML into the `#wrapper` property.
-   * Can throw an error if the constructor parameters are invalid
-   * @param {HTMLElement} bodyContents
-   * @returns {void}
+   * Attaches event listeners to the window when the sheet is mounted
    */
-  #renderHTML(bodyContents) {
-    this.#validateParameters()
-
-    this.#wrapper = (
-      <div class="bottom-sheet-wrapper" id={this.#identifier} role="dialog" aria-hidden="true">
-        <div class="bottom-sheet-overlay" onClick={this.#eventListeners.onOverlayClick}></div>
-        <div class="bottom-sheet" reference={sheet => this.#sheet = sheet}>
-          <header class="bottom-sheet-controls">
-            <div
-              class="bottom-sheet-draggable-area"
-              reference={area => this.#draggableArea = area}
-              onMouseDown={this.#eventListeners.onDragStart}
-              onTouchStart={this.#eventListeners.onDragStart}
-            >
-              <div class="bottom-sheet-draggable-thumb"></div>
-            </div>
-
-            <button
-              type="button"
-              aria-controls={this.#identifier}
-              class="bottom-sheet-close-button"
-              onClick={this.#eventListeners.onCloseButtonClick}
-              title="Close the sheet"
-            >
-              &times;
-            </button>
-          </header>
-          <main class="bottom-sheet-body">
-            {bodyContents}
-          </main>
-        </div>
-      </div>
-    )
-
-    sheetDisplayStateChangeObserver.observe(this.#wrapper, {
-      attributes: true,
-      attributeFilter: ["aria-hidden"]
-    })
-
+  connectedCallback() {
     window.addEventListener("keyup", this.#eventListeners.onKeyUp)
 
     window.addEventListener("mousemove", this.#eventListeners.onDragMove)
@@ -374,9 +236,7 @@ export class BottomSheet {
   /**
    * Removes all the event listeners when the sheet is no longer mounted
    */
-  #removeWindowEventListeners() {
-    sheetDisplayStateChangeObserver.handleChangesAndDisconnect(this.#wrapper)
-
+  disconnectedCallback() {
     window.removeEventListener("keyup", this.#eventListeners.onKeyUp)
 
     window.removeEventListener("mousemove", this.#eventListeners.onDragMove)
@@ -387,4 +247,8 @@ export class BottomSheet {
   }
 }
 
-export default BottomSheet
+export default SheetElement
+
+// TODO: decide on the component name
+customElements.define("sheet-element", SheetElement)
+
