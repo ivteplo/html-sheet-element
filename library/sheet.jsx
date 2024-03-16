@@ -5,9 +5,12 @@
 
 /** @jsx createElement */
 
-import { isFocused, touchPosition, getCSSVariableValue, mapNumber, createElement, elementContains } from "./helpers"
-import { styleSheet } from "./styleSheet"
+import { isFocused, touchPosition, getCSSVariableValue, mapNumber, createElement, elementContains } from "./helpers.js"
+import { styleSheet } from "./styleSheet.js"
 
+/**
+ * HTML Custom Element for creating sheets
+ */
 export class SheetElement extends HTMLElement {
   /**
    * Inner wrapper
@@ -91,12 +94,13 @@ export class SheetElement extends HTMLElement {
    * @returns {boolean}
    */
   get open() {
-    return this.getAttribute("open")
+    return this.hasAttribute("open")
   }
 
   /**
    * An alternative way to open or close the sheet
    * @param {boolean} value
+   * @returns {boolean}
    * @example
    * sheet.open = true  // the same as executing sheet.showModal()
    * sheet.open = false // the same as executing sheet.close()
@@ -104,8 +108,10 @@ export class SheetElement extends HTMLElement {
   set open(value) {
     if (value === false || value === undefined) {
       this.close()
+      return false
     } else {
       this.showModal()
+      return true
     }
   }
 
