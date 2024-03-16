@@ -1,12 +1,12 @@
 //
-// Copyright (c) 2022-2023 Ivan Teplov
+// Copyright (c) 2022-2024 Ivan Teplov
 // Licensed under the Apache license 2.0
 //
 
 import SheetElement from "../library/sheet"
 
 
-customElements.define("sheet-element", SheetElement)
+customElements.define("ui-sheet", SheetElement)
 
 const openSheetButton = document.getElementById("open-sheet")
 const sheet = document.getElementById("sheet")

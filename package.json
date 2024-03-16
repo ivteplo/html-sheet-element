@@ -1,6 +1,6 @@
 {
-  "name": "@ivteplo/bottom-sheet",
-  "description": "Bottom sheet component, implemented in pure JavaScript",
+  "name": "@ivteplo/html-sheet-element",
+  "description": "HTML Custom Element for Sheets",
   "author": "Ivan Teplov <iteplov7@gmail.com>",
   "license": "Apache-2.0",
   "version": "1.0.0",

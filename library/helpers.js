@@ -16,10 +16,10 @@ export const isFocused = element => document.activeElement === element
  * @returns {MouseEvent|Touch}
  */
 export const touchPosition = (event) =>
-  event instanceof TouchEvent
-    ? event.type === "touchend"
-      ? event.changedTouches[0]
-      : event.touches[0]
+  event.type === "touchend"
+    ? event.changedTouches[0]
+    : event.type.startsWith("touch")
+    ? event.touches[0]
     : event
 
 
