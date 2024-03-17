@@ -20,7 +20,8 @@
   },
   "scripts": {
     "dev": "vite --config test/vite.config.js",
-    "build": "vite build"
+    "build": "vite build",
+    "docs:api": "deno run -A documentation/generateDocumentation.js"
   },
   "devDependencies": {
     "vite": "^4.3.0"

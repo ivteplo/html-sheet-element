@@ -3,10 +3,26 @@
 HTML Custom Element for creating sheets
 
 <details open>
-<summary><b>Example:</b> Define the element in the registry</summary>
+<summary><b>Example:</b> Define the element in the registry and use it in your HTML</summary>
 
 ```jsx
 customElements.define("ui-sheet", SheetElement)
+
+// in HTML:
+<ui-sheet>
+  <p>Hello World!</p>
+</ui-sheet>
+```
+
+</details>
+
+<details open>
+<summary><b>Example:</b> Sheet open by default</summary>
+
+```jsx
+<ui-sheet open>
+  <p>Hello World!</p>
+</ui-sheet>
 ```
 
 </details>
@@ -42,7 +58,39 @@ sheet.show()
 </details>
 
 
+## `options`
+
+Options for behavior customization
+
+<details open>
+<summary><b>Example:</b> Make the sheet <i>not</i> close on background click</summary>
+
+```jsx
+<ui-sheet ignore-background-click>
+  ...
+</ui-sheet>
+```
+
+</details>
+
+<details open>
+<summary><b>Example:</b> Make the sheet <i>not</i> close when pressing Escape</summary>
+
+```jsx
+<ui-sheet ignore-escape-key>
+  ...
+</ui-sheet>
+```
+
+</details>
+
+
 ## `showModal(): void`
+
+Open the sheet
+
+
+## `show(): void`
 
 Open the sheet
 

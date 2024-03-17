@@ -11,8 +11,18 @@ import { styleSheet } from "./styleSheet.js"
 /**
  * HTML Custom Element for creating sheets
  *
- * @example <caption>Define the element in the registry</caption>
+ * @example <caption>Define the element in the registry and use it in your HTML</caption>
  * customElements.define("ui-sheet", SheetElement)
+ *
+ * // in HTML:
+ * <ui-sheet>
+ *   <p>Hello World!</p>
+ * </ui-sheet>
+ *
+ * @example <caption>Sheet open by default</caption>
+ * <ui-sheet open>
+ *   <p>Hello World!</p>
+ * </ui-sheet>
  *
  * @example <caption>Execute certain actions when the sheet opens or closes</caption>
  * const sheet = document.querySelector("...")
@@ -57,6 +67,19 @@ export class SheetElement extends HTMLElement {
     onClick: this.#onClick.bind(this)
   }
 
+  /**
+   * Options for behavior customization
+   *
+   * @example <caption>Make the sheet <i>not</i> close on background click</caption>
+   * <ui-sheet ignore-background-click>
+   *   ...
+   * </ui-sheet>
+   *
+   * @example <caption>Make the sheet <i>not</i> close when pressing Escape</caption>
+   * <ui-sheet ignore-escape-key>
+   *   ...
+   * </ui-sheet>
+   */
   options = {
     closeOnBackgroundClick: true,
     closeOnEscapeKey: true
@@ -132,7 +155,9 @@ export class SheetElement extends HTMLElement {
   /**
    * Open the sheet
    */
-  show = this.showModal
+  show() {
+    this.showModal()
+  }
 
   /**
    * Collapse the sheet

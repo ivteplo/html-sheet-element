@@ -96,6 +96,10 @@ class DocumentationGenerator {
         break
     }
 
+    if (object.isStatic) {
+      name = "static " + name
+    }
+
     return "`" + name + "`"
   }
 
@@ -120,9 +124,10 @@ class DocumentationGenerator {
   }
 
   static generateExample(tag) {
-    const summaryMatchGroup = /\<caption\>([^\<\>]*)\<\/caption\>/.exec(tag.doc)
+    const summaryMatchGroup = /\<caption\>(([^\<\n]|<\/?i>|<\/?b>|<\/?u>|<\/?a>)*)\<\/caption\>/.exec(tag.doc)
     const summaryString = summaryMatchGroup?.[1] ?? ""
     const summaryCode = summaryString ? `<b>Example:</b> ${summaryString}` : "<b>Example</b>"
+
     const code = tag.doc
       .substring(summaryMatchGroup?.[0].length ?? 0)
       .trim()
@@ -137,6 +142,7 @@ class DocumentationGenerator {
         object.jsDoc?.doc,
         ...this.generateTags(object),
       ], "\n\n"),
+      ...(object.classDef?.properties.map(property => this.generate(property, deepnessLevel + 1)) ?? []),
       ...(object.classDef?.methods.map(method => this.generate(method, deepnessLevel + 1)) ?? []),
     ], "\n\n\n")
   }
