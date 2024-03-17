@@ -180,7 +180,7 @@ export class SheetElement extends HTMLElement {
    * @param {boolean} value
    * @returns {boolean}
    * @example
-   * sheet.open = true  // the same as executing sheet.showModal()
+   * sheet.open = true  // the same as executing sheet.show()
    * sheet.open = false // the same as executing sheet.close()
    */
   set open(value) {
@@ -188,7 +188,7 @@ export class SheetElement extends HTMLElement {
       this.close()
       return false
     } else {
-      this.showModal()
+      this.show()
       return true
     }
   }
