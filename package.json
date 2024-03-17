@@ -2,6 +2,7 @@
   "name": "@ivteplo/html-sheet-element",
   "description": "HTML Custom Element for Sheets",
   "author": "Ivan Teplov <iteplov7@gmail.com>",
+  "keywords": ["bottom-sheet", "sheet", "html", "web-components-api", "web-components", "html-custom-element", "cross-framework"],
   "license": "Apache-2.0",
   "version": "1.0.0",
   "type": "module",
