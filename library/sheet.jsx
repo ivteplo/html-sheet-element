@@ -57,21 +57,32 @@ export class SheetElement extends HTMLElement {
     onClick: this.#onClick.bind(this)
   }
 
-  /**
-   * @param {object} options
-   * @param {boolean?} options.closeOnBackgroundClick
-   * @param {boolean?} options.closeOnEscapeKey
-   */
-  constructor(options = {}) {
+  options = {
+    closeOnBackgroundClick: true,
+    closeOnEscapeKey: true
+  }
+
+  constructor() {
     super()
 
     this.role = "dialog"
 
-    this.options = {
-      closeOnBackgroundClick: true,
-      closeOnEscapeKey: true,
-      ...options
-    }
+    Object.defineProperties(this.options, {
+      closeOnBackgroundClick: {
+        get: () =>
+          !this.hasAttribute("ignore-background-click"),
+        set: value => Boolean(value)
+          ? this.removeAttribute("ignore-background-click")
+          : this.setAttribute("ignore-background-click", true)
+      },
+      closeOnEscapeKey: {
+        get: () =>
+          !this.hasAttribute("ignore-escape-key"),
+        set: value => Boolean(value)
+          ? this.removeAttribute("ignore-escape-key")
+          : this.setAttribute("ignore-escape-key", true)
+      }
+    })
 
     const shadowRoot = this.attachShadow({
       mode: "open"
