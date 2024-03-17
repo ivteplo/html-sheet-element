@@ -10,6 +10,27 @@ import { styleSheet } from "./styleSheet.js"
 
 /**
  * HTML Custom Element for creating sheets
+ *
+ * @example <caption>Define the element in the registry</caption>
+ * customElements.define("ui-sheet", SheetElement)
+ *
+ * @example <caption>Execute certain actions when the sheet opens or closes</caption>
+ * const sheet = document.querySelector("...")
+ *
+ * sheet.addEventListener("show", event => {
+ *   console.log("The sheet is now shown")
+ * })
+ *
+ * sheet.addEventListener("close", event => {
+ *   console.log("The sheet is now closed")
+ * })
+ *
+ * @example <caption>Open the sheet programmatically</caption>
+ * const sheet = document.querySelector("...")
+ *
+ * sheet.showModal()
+ * // is the same as:
+ * sheet.show()
  */
 export class SheetElement extends HTMLElement {
   /**
@@ -90,6 +111,27 @@ export class SheetElement extends HTMLElement {
   }
 
   /**
+   * Open the sheet
+   */
+  showModal() {
+    this.setAttribute("open", true)
+    this.dispatchEvent(new CustomEvent("show"))
+  }
+
+  /**
+   * Open the sheet
+   */
+  show = this.showModal
+
+  /**
+   * Collapse the sheet
+   */
+  close() {
+    this.removeAttribute("open")
+    this.dispatchEvent(new CustomEvent("close"))
+  }
+
+  /**
    * Check if the sheet is open
    * @returns {boolean}
    */
@@ -113,27 +155,6 @@ export class SheetElement extends HTMLElement {
       this.showModal()
       return true
     }
-  }
-
-  /**
-   * Open the sheet
-   */
-  showModal() {
-    this.setAttribute("open", true)
-    this.dispatchEvent(new CustomEvent("show"))
-  }
-
-  /**
-   * Open the sheet
-   */
-  show = this.showModal
-
-  /**
-   * Collapse the sheet
-   */
-  close() {
-    this.removeAttribute("open")
-    this.dispatchEvent(new CustomEvent("close"))
   }
 
   /**
@@ -245,6 +266,7 @@ export class SheetElement extends HTMLElement {
 
   /**
    * Attaches event listeners to the window when the sheet is mounted
+   * @ignore
    */
   connectedCallback() {
     window.addEventListener("keyup", this.#eventListeners.onKeyUp)
@@ -258,6 +280,7 @@ export class SheetElement extends HTMLElement {
 
   /**
    * Removes all the event listeners when the sheet is no longer mounted
+   * @ignore
    */
   disconnectedCallback() {
     window.removeEventListener("keyup", this.#eventListeners.onKeyUp)

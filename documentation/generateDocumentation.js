@@ -16,7 +16,7 @@ async function main() {
   const documentationInMarkdown = documentationInJSON
     .filter(DocumentationGenerator.isObjectDocumentationToBeDisplayed)
     .map(object => DocumentationGenerator.generate(object))
-    .join("\n\n\n")
+    .join("\n\n\n\n") + "\n"
 
   await Deno.writeTextFile(outputFile, documentationInMarkdown)
 }
@@ -35,11 +35,25 @@ class Markdown {
    * @param {string} information
    */
   static property(name, information) {
-    return `*${name}*: ${information}`
+    return `**${name}**: ${information}`
+  }
+
+  /**
+   * @see https://gist.github.com/scmx/eca72d44afee0113ceb0349dd54a84a2
+   */
+  static dropdown(summary, contents) {
+    return (
+      "<details open>\n" +
+        `<summary>${summary}</summary>\n` +
+        `\n` +
+        `${contents}\n` +
+        `\n` +
+      "</details>"
+    )
   }
 }
 
-function join(items, separator = "\n") {
+function join(items, separator = " ") {
   return (Array.isArray(items) && items || [])
     .filter(Boolean)
     .map(string => string.trim())
@@ -82,7 +96,7 @@ class DocumentationGenerator {
         break
     }
 
-    return name
+    return "`" + name + "`"
   }
 
   static generateTags(object) {
@@ -96,8 +110,24 @@ class DocumentationGenerator {
     }
 
     return object.jsDoc.tags.map(
-      tag => Markdown.property(join([tag.kind, tag.name], " "), tag?.doc ?? tag?.type ?? "")
+      tag => tag.kind === "example"
+        ? this.generateExample(tag)
+        : Markdown.property(
+          join([tag.kind, tag.name], " "),
+          tag?.doc ?? tag?.type ?? ""
+        )
     )
+  }
+
+  static generateExample(tag) {
+    const summaryMatchGroup = /\<caption\>([^\<\>]*)\<\/caption\>/.exec(tag.doc)
+    const summaryString = summaryMatchGroup?.[1] ?? ""
+    const summaryCode = summaryString ? `<b>Example:</b> ${summaryString}` : "<b>Example</b>"
+    const code = tag.doc
+      .substring(summaryMatchGroup?.[0].length ?? 0)
+      .trim()
+
+    return Markdown.dropdown(summaryCode, "```jsx\n" + code + "\n```")
   }
 
   static generate(object, deepnessLevel = 1) {
@@ -106,9 +136,9 @@ class DocumentationGenerator {
         Markdown.title(this.generateObjectName(object), deepnessLevel),
         object.jsDoc?.doc,
         ...this.generateTags(object),
-      ]),
+      ], "\n\n"),
       ...(object.classDef?.methods.map(method => this.generate(method, deepnessLevel + 1)) ?? []),
-    ], "\n\n")
+    ], "\n\n\n")
   }
 
   static isObjectDocumentationToBeDisplayed(object) {
