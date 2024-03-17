@@ -28,10 +28,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ivteplo/bottom-sheet.git"
+    "url": "git+https://github.com/ivteplo/html-sheet-element.git"
   },
   "bugs": {
-    "url": "https://github.com/ivteplo/bottom-sheet/issues"
+    "url": "https://github.com/ivteplo/html-sheet-element/issues"
   },
-  "homepage": "https://github.com/ivteplo/bottom-sheet#readme"
+  "homepage": "https://github.com/ivteplo/html-sheet-element#readme"
 }

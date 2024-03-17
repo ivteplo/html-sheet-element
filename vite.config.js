@@ -13,12 +13,15 @@ export default defineConfig({
     }
   },
   build: {
+    output: {
+      exports: "named"
+    },
     outDir: resolve(__dirname, "./build/"),
     minify: false,
     cssMinify: false,
     lib: {
       entry: resolve(__dirname, "./library/sheet.jsx"),
-      name: "BottomSheet",
+      name: "SheetElement",
       fileName: "index"
     },
     cssCodeSplit: true,
