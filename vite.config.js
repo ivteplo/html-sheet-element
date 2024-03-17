@@ -13,22 +13,22 @@ export default defineConfig({
     }
   },
   build: {
-    output: {
-      exports: "named"
-    },
     outDir: resolve(__dirname, "./build/"),
     minify: false,
     cssMinify: false,
     lib: {
       entry: resolve(__dirname, "./library/sheet.jsx"),
       name: "SheetElement",
-      fileName: "index"
+      fileName: "index",
     },
     cssCodeSplit: true,
     rollupOptions: {
       // make sure to externalize deps that shouldn't be bundled
       // into your library
-      external: []
+      external: [],
+      output: {
+        exports: "named",
+      }
     }
   }
 })

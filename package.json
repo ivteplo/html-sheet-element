@@ -6,7 +6,8 @@
   "version": "1.0.0",
   "type": "module",
   "files": [
-    "build"
+    "build",
+    "documentation/*.md"
   ],
   "main": "./build/index.umd.cjs",
   "module": "./build/index.js",
@@ -20,7 +21,7 @@
   },
   "scripts": {
     "dev": "vite --config test/vite.config.js",
-    "build": "vite build",
+    "build": "vite build --config vite.config.js",
     "docs:api": "deno run -A documentation/generateDocumentation.js"
   },
   "devDependencies": {
