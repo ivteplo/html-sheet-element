@@ -1,6 +1,6 @@
 # HTML Sheet Element
 
-HTML Custom Element for creating sheets
+HTML Custom Element for creating sheets. Displayed as a bottom sheet on mobile and centered sheet on desktop.
 
 
 ## Features
@@ -13,5 +13,48 @@ HTML Custom Element for creating sheets
 
 ## API Documentation
 
-You can find API documentation [here](./documentation/API.md)
+You can find API documentation [here](./documentation/API.md).
+
+
+## Development
+
+### Prerequisites
+
+You need to have Git, Node.js, Deno, and any browser installed.
+
+### Setup
+
+1. Open your terminal
+
+2. Clone this repository
+    ```bash
+    git clone https://github.com/ivteplo/html-sheet-element/
+    ```
+
+3. Navigate into the cloned directory
+    ```bash
+    cd html-sheet-element
+    ```
+
+4. Install dependencies
+    ```bash
+    npm install
+    ```
+
+5. Start the development server
+    ```bash
+    npm run dev
+    ```
+
+6. Build the library
+    ```bash
+    npm run build
+    ```
+
+7. Build the API documentation
+    ```bash
+    npm run docs:api
+    ```
+
+8. Happy hacking :tada:
 
