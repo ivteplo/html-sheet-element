@@ -33,7 +33,7 @@ customElements.define("ui-sheet", SheetElement)
 ```jsx
 const sheet = document.querySelector("...")
 
-sheet.addEventListener("show", event => {
+sheet.addEventListener("open", event => {
   console.log("The sheet is now shown")
 })
 

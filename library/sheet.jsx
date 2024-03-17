@@ -27,7 +27,7 @@ import { styleSheet } from "./styleSheet.js"
  * @example <caption>Execute certain actions when the sheet opens or closes</caption>
  * const sheet = document.querySelector("...")
  *
- * sheet.addEventListener("show", event => {
+ * sheet.addEventListener("open", event => {
  *   console.log("The sheet is now shown")
  * })
  *
@@ -149,7 +149,7 @@ export class SheetElement extends HTMLElement {
    */
   showModal() {
     this.setAttribute("open", true)
-    this.dispatchEvent(new CustomEvent("show"))
+    this.dispatchEvent(new CustomEvent("open"))
   }
 
   /**

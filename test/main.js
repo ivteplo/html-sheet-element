@@ -15,10 +15,11 @@ openSheetButton.addEventListener("click", () => {
   sheet.showModal()
 })
 
+sheet.addEventListener("open", () => {
+  console.log("The sheet has been opened")
+})
+
 sheet.addEventListener("close", () => {
   console.log("The sheet has been closed")
 })
 
-sheet.addEventListener("show", () => {
-  console.log("The sheet has been shown")
-})
