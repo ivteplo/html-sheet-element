@@ -11,6 +11,48 @@ HTML Custom Element for creating sheets. Displayed as a bottom sheet on mobile a
 - API is similar to the `<dialog>` element's
 
 
+## Installation
+
+You can install this library from the npm registry:
+
+```bash
+npm install @ivteplo/html-sheet-element
+```
+
+Or you can import it dynamically from a CDN:
+
+```javascript
+const { SheetElement } = await import("https://unpkg.com/@ivteplo/html-sheet-element@1.0.0/build/index.js")
+```
+
+
+## Usage
+
+Before being able to use the element in your HTML, you need to specify a tag name for it using JavaScript:
+
+```javascript
+import { SheetElement } from "@ivteplo/html-sheet-element"
+
+// You can choose another tag name instead of `ui-sheet`
+customElements.register("ui-sheet", SheetElement)
+```
+
+Then you can use the tag in your HTML:
+
+```html
+<ui-sheet id="sheet">
+  <p>Hello World!</p>
+</ui-sheet>
+```
+
+To open a sheet, call the element's `showModal` method:
+
+```javascript
+const sheet = document.querySelector("sheet")
+sheet.showModal()
+```
+
+
 ## API Documentation
 
 You can find API documentation [here](./documentation/API.md).
