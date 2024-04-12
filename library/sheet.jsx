@@ -19,7 +19,7 @@ import { styleSheet } from "./styleSheet.js"
  *   <p>Hello World!</p>
  * </ui-sheet>
  *
- * @example <caption>Sheet open by default</caption>
+ * @example <caption>Open the sheet by default</caption>
  * <ui-sheet open>
  *   <p>Hello World!</p>
  * </ui-sheet>
@@ -41,6 +41,18 @@ import { styleSheet } from "./styleSheet.js"
  * sheet.showModal()
  * // is the same as:
  * sheet.show()
+ *
+ * @example <caption>Show a title in the sheet header</caption>
+ * <ui-sheet>
+ *   <h2 slot="title-area">Title</h2>
+ *   <!-- ... -->
+ * </ui-sheet>
+ *
+ * @example <caption>Replace a button in the sheet header</caption>
+ * <ui-sheet id="sheet">
+ *   <button slot="button-area" type="button" aria-controls="sheet" onclick="sheet.close()">Close</button>
+ *   <!-- ... -->
+ * </ui-sheet>
  */
 export class SheetElement extends HTMLElement {
   /**
@@ -116,6 +128,10 @@ export class SheetElement extends HTMLElement {
     shadowRoot.append(
       <div class="sheet-contents" reference={sheet => this.#sheet = sheet}>
         <header class="sheet-controls">
+          <div class="sheet-title-area">
+            <slot name="title-area" />
+          </div>
+
           <div
             class="sheet-draggable-area"
             reference={area => this.#draggableArea = area}
@@ -125,15 +141,19 @@ export class SheetElement extends HTMLElement {
             <div class="sheet-draggable-thumb"></div>
           </div>
 
-          <button
-            type="button"
-            aria-controls={this?.id ?? ""}
-            class="sheet-close-button"
-            onClick={this.#eventListeners.onCloseButtonClick}
-            title="Close the sheet"
-          >
-            &times;
-          </button>
+          <div class="sheet-button-area">
+            <slot name="button-area">
+              <button
+                type="button"
+                aria-controls={this?.id ?? ""}
+                class="sheet-close-button"
+                onClick={this.#eventListeners.onCloseButtonClick}
+                title="Close the sheet"
+              >
+                &times;
+              </button>
+            </slot>
+          </div>
         </header>
         <main class="sheet-body">
           <slot />

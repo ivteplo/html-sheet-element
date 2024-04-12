@@ -17,7 +17,7 @@ customElements.define("ui-sheet", SheetElement)
 </details>
 
 <details open>
-<summary><b>Example:</b> Sheet open by default</summary>
+<summary><b>Example:</b> Open the sheet by default</summary>
 
 ```jsx
 <ui-sheet open>
@@ -53,6 +53,30 @@ const sheet = document.querySelector("...")
 sheet.showModal()
 // is the same as:
 sheet.show()
+```
+
+</details>
+
+<details open>
+<summary><b>Example:</b> Show a title in the sheet header</summary>
+
+```jsx
+<ui-sheet>
+  <h2 slot="title-area">Title</h2>
+  <!-- ... -->
+</ui-sheet>
+```
+
+</details>
+
+<details open>
+<summary><b>Example:</b> Replace a button in the sheet header</summary>
+
+```jsx
+<ui-sheet id="sheet">
+  <button slot="button-area" type="button" aria-controls="sheet" onclick="sheet.close()">Close</button>
+  <!-- ... -->
+</ui-sheet>
 ```
 
 </details>
@@ -113,7 +137,7 @@ An alternative way to open or close the sheet
 <summary><b>Example</b></summary>
 
 ```jsx
-sheet.open = true  // the same as executing sheet.showModal()
+sheet.open = true  // the same as executing sheet.show()
 sheet.open = false // the same as executing sheet.close()
 ```
 

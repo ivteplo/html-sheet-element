@@ -13,6 +13,8 @@ styleSheet.replaceSync(`
     --sheet-thumb-color: #eee;
     --sheet-transition-duration: 0.5s;
     --sheet-border-radius: 1rem;
+    --sheet-header-padding: 0 0 0 1rem;
+    --sheet-body-padding: 1rem;
 
     display: flex;
     flex-direction: column;
@@ -97,7 +99,15 @@ styleSheet.replaceSync(`
   }
 
   .sheet-controls {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: stretch;
+    padding: var(--sheet-header-padding);
+  }
+
+  .sheet-title-area {
     display: flex;
+    justify-content: flex-start;
   }
 
   .sheet-draggable-area {
@@ -112,6 +122,11 @@ styleSheet.replaceSync(`
     height: 0.25rem;
     background: var(--sheet-thumb-color);
     border-radius: 0.125rem;
+  }
+
+  .sheet-button-area {
+    display: flex;
+    justify-content: flex-end;
   }
 
   .sheet-close-button {
@@ -132,7 +147,7 @@ styleSheet.replaceSync(`
 
     overflow-y: auto;
 
-    padding: 1rem;
+    padding: var(--sheet-body-padding);
     box-sizing: border-box;
   }
 
@@ -153,9 +168,8 @@ styleSheet.replaceSync(`
     }
 
     .sheet-controls {
-      justify-content: flex-end;
+      grid-template-columns: 1fr auto auto;
     }
   }
-
 `)
 
