@@ -180,8 +180,10 @@ export class SheetElement extends HTMLElement {
    * Open the sheet
    */
   showModal() {
-    this.setAttribute("open", true)
-    this.dispatchEvent(new CustomEvent("open"))
+    if (!this.hasAttribute("open")) {
+      this.setAttribute("open", true)
+      this.dispatchEvent(new CustomEvent("open"))
+    }
   }
 
   /**
@@ -195,8 +197,10 @@ export class SheetElement extends HTMLElement {
    * Collapse the sheet
    */
   close() {
-    this.removeAttribute("open")
-    this.dispatchEvent(new CustomEvent("close"))
+    if (this.hasAttribute("open")) {
+      this.removeAttribute("open")
+      this.dispatchEvent(new CustomEvent("close"))
+    }
   }
 
   /**
