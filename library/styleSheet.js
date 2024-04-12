@@ -54,14 +54,13 @@ styleSheet.replaceSync(`
   }
 
   /* ::backdrop is not supported :( */
-  :host::before {
-    content: "";
+  .sheet-backdrop {
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: var(--overlay-color, rgba(0, 0, 0, 0.5));
+    background-color: var(--overlay-color);
   }
 
   .sheet-contents {

@@ -87,10 +87,10 @@ sheet.show()
 Options for behavior customization
 
 <details open>
-<summary><b>Example:</b> Make the sheet <i>not</i> close on background click</summary>
+<summary><b>Example:</b> Make the sheet <i>not</i> close on backdrop click</summary>
 
 ```jsx
-<ui-sheet ignore-background-click>
+<ui-sheet ignore-backdrop-click>
   ...
 </ui-sheet>
 ```
@@ -102,6 +102,17 @@ Options for behavior customization
 
 ```jsx
 <ui-sheet ignore-escape-key>
+  ...
+</ui-sheet>
+```
+
+</details>
+
+<details open>
+<summary><b>Example:</b> Make the sheet <i>not</i> close when dragging it down</summary>
+
+```jsx
+<ui-sheet ignore-dragging-down>
   ...
 </ui-sheet>
 ```

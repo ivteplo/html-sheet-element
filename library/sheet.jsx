@@ -76,14 +76,14 @@ export class SheetElement extends HTMLElement {
     onDragEnd: this.#onDragEnd.bind(this),
     onKeyUp: this.#onKeyUp.bind(this),
     onCloseButtonClick: this.#onCloseButtonClick.bind(this),
-    onClick: this.#onClick.bind(this)
+    onBackdropClick: this.#onBackdropClick.bind(this)
   }
 
   /**
    * Options for behavior customization
    *
-   * @example <caption>Make the sheet <i>not</i> close on background click</caption>
-   * <ui-sheet ignore-background-click>
+   * @example <caption>Make the sheet <i>not</i> close on backdrop click</caption>
+   * <ui-sheet ignore-backdrop-click>
    *   ...
    * </ui-sheet>
    *
@@ -91,10 +91,16 @@ export class SheetElement extends HTMLElement {
    * <ui-sheet ignore-escape-key>
    *   ...
    * </ui-sheet>
+   *
+   * @example <caption>Make the sheet <i>not</i> close when dragging it down</caption>
+   * <ui-sheet ignore-dragging-down>
+   *   ...
+   * </ui-sheet>
    */
   options = {
-    closeOnBackgroundClick: true,
-    closeOnEscapeKey: true
+    closeOnBackdropClick: true,
+    closeOnEscapeKey: true,
+    closeOnDraggingDown: true
   }
 
   constructor() {
@@ -103,12 +109,12 @@ export class SheetElement extends HTMLElement {
     this.role = "dialog"
 
     Object.defineProperties(this.options, {
-      closeOnBackgroundClick: {
+      closeOnBackdropClick: {
         get: () =>
-          !this.hasAttribute("ignore-background-click"),
+          !this.hasAttribute("ignore-backdrop-click"),
         set: value => Boolean(value)
-          ? this.removeAttribute("ignore-background-click")
-          : this.setAttribute("ignore-background-click", true)
+          ? this.removeAttribute("ignore-backdrop-click")
+          : this.setAttribute("ignore-backdrop-click", true)
       },
       closeOnEscapeKey: {
         get: () =>
@@ -116,6 +122,13 @@ export class SheetElement extends HTMLElement {
         set: value => Boolean(value)
           ? this.removeAttribute("ignore-escape-key")
           : this.setAttribute("ignore-escape-key", true)
+      },
+      closeOnDraggingDown: {
+        get: () =>
+          !this.hasAttribute("ignore-dragging-down"),
+        set: value => Boolean(value)
+          ? this.removeAttribute("ignore-dragging-down")
+          : this.setAttribute("ignore-dragging-down", true)
       }
     })
 
@@ -126,6 +139,7 @@ export class SheetElement extends HTMLElement {
     shadowRoot.adoptedStyleSheets = [styleSheet]
 
     shadowRoot.append(
+      <div class="sheet-backdrop" onClick={this.#eventListeners.onBackdropClick} />,
       <div class="sheet-contents" reference={sheet => this.#sheet = sheet}>
         <header class="sheet-controls">
           <div class="sheet-title-area">
@@ -160,8 +174,6 @@ export class SheetElement extends HTMLElement {
         </main>
       </div>
     )
-
-    this.addEventListener("click", this.#onClick)
   }
 
   /**
@@ -214,14 +226,11 @@ export class SheetElement extends HTMLElement {
   }
 
   /**
-   * Hide the sheet when clicking at the background
-   * @param {PointerEvent} event
+   * Hide the sheet when clicking at the backdrop
    * @returns {void}
    */
-  #onClick(event) {
-    const path = event.composedPath()
-
-    if (!path.find(item => item === this.#sheet) && this.options.closeOnBackgroundClick) {
+  #onBackdropClick() {
+    if (this.options.closeOnBackdropClick) {
       this.close()
     }
   }
@@ -307,7 +316,7 @@ export class SheetElement extends HTMLElement {
     const distanceToTheBottomInPercents =
       this.#getDistanceToTheBottomInPercents(touchPosition(event).pageY)
 
-    if (distanceToTheBottomInPercents < 75) {
+    if (distanceToTheBottomInPercents < 75 && this.options.closeOnDraggingDown) {
       this.close()
     }
 
