@@ -35,6 +35,24 @@ import { styleSheet } from "./styleSheet.js"
  *   console.log("The sheet is now closed")
  * })
  *
+ * @example <caption>Confirm whether the user actually wants to close a sheet without submition</caption>
+ * // HTML:
+ * <ui-sheet>
+ *   <form method="dialog">
+ *     <textbox placeholder="Your feedback" required></textbox>
+ *     <button type="submit">Send</button>
+ *   </form>
+ * </ui-sheet>
+ *
+ * // JavaScript:
+ * sheet.addEventListener("cancel", event => {
+ *   const userWantsToClose = confirm("Are you sure you want to close the form without submition?")
+ *   if (!userWantsToClose) {
+ *     // the sheet is not going to be closed
+ *     event.preventDefault()
+ *   }
+ * })
+ *
  * @example <caption>Open the sheet programmatically</caption>
  * const sheet = document.querySelector("...")
  *
@@ -76,7 +94,8 @@ export class SheetElement extends HTMLElement {
     onDragEnd: this.#onDragEnd.bind(this),
     onKeyUp: this.#onKeyUp.bind(this),
     onCloseButtonClick: this.#onCloseButtonClick.bind(this),
-    onBackdropClick: this.#onBackdropClick.bind(this)
+    onBackdropClick: this.#onBackdropClick.bind(this),
+    onSubmit: this.#onSubmit.bind(this)
   }
 
   /**
@@ -103,10 +122,19 @@ export class SheetElement extends HTMLElement {
     closeOnDraggingDown: true
   }
 
+  /**
+   * Gets or sets the return value for the sheet, usually to indicate which button the user pressed to close it.
+   * @see https://developer.mozilla.org/en-US/docs/Web/API/HTMLDialogElement/returnValue
+   * @type {string}
+   */
+  returnValue = ""
+
   constructor() {
     super()
 
     this.role = "dialog"
+    this.ariaModal = true
+    this.addEventListener("submit", this.#eventListeners.onSubmit)
 
     Object.defineProperties(this.options, {
       closeOnBackdropClick: {
@@ -182,7 +210,14 @@ export class SheetElement extends HTMLElement {
   showModal() {
     if (!this.hasAttribute("open")) {
       this.setAttribute("open", true)
-      this.dispatchEvent(new CustomEvent("open"))
+      this.ariaHidden = false
+
+      const event = new CustomEvent("open", {
+        bubbles: false,
+        cancelable: false
+      })
+
+      this.dispatchEvent(event)
     }
   }
 
@@ -197,9 +232,38 @@ export class SheetElement extends HTMLElement {
    * Collapse the sheet
    */
   close() {
-    if (this.hasAttribute("open")) {
-      this.removeAttribute("open")
-      this.dispatchEvent(new CustomEvent("close"))
+    if (!this.hasAttribute("open")) {
+      return
+    }
+
+    this.removeAttribute("open")
+    this.ariaHidden = true
+
+    const event = new CustomEvent("close", {
+      bubbles: false,
+      cancelable: false
+    })
+
+    this.dispatchEvent(event)
+  }
+
+  /**
+   * Close the sheet when the form hasn't been submitted
+   */
+  #cancelAndCloseIfApplicable() {
+    if (!this.hasAttribute("open")) {
+      return
+    }
+
+    const event = new CustomEvent("cancel", {
+      bubbles: false,
+      cancelable: true
+    })
+
+    const isDefaultBehaviorNotPrevented = this.dispatchEvent(event)
+
+    if (isDefaultBehaviorNotPrevented) {
+      this.close()
     }
   }
 
@@ -230,12 +294,30 @@ export class SheetElement extends HTMLElement {
   }
 
   /**
+   * On submit of a form inside of the sheet
+   * @param {SubmitEvent} event
+   * @returns {void}
+   */
+  #onSubmit(event) {
+    const form = event.target
+    const button = event.submitter
+
+    if (form?.method === "dialog" || button?.formMethod === "dialog") {
+      event.stopImmediatePropagation()
+      event.preventDefault()
+
+      this.returnValue = button?.value ?? ""
+      this.close()
+    }
+  }
+
+  /**
    * Hide the sheet when clicking at the backdrop
    * @returns {void}
    */
   #onBackdropClick() {
     if (this.options.closeOnBackdropClick) {
-      this.close()
+      this.#cancelAndCloseIfApplicable()
     }
   }
 
@@ -244,7 +326,7 @@ export class SheetElement extends HTMLElement {
    * @returns {void}
    */
   #onCloseButtonClick() {
-    this.close()
+    this.#cancelAndCloseIfApplicable()
   }
 
   /**
@@ -257,7 +339,7 @@ export class SheetElement extends HTMLElement {
       elementContains(event.target, this) && isFocused(event.target)
 
     if (event.key === "Escape" && !isSheetElementFocused && this.options.closeOnEscapeKey) {
-      this.close()
+      this.#cancelAndCloseIfApplicable()
     }
   }
 
@@ -363,4 +445,3 @@ export class SheetElement extends HTMLElement {
 }
 
 export default SheetElement
-

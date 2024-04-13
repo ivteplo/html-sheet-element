@@ -45,6 +45,30 @@ sheet.addEventListener("close", event => {
 </details>
 
 <details open>
+<summary><b>Example:</b> Confirm whether the user actually wants to close a sheet without submition</summary>
+
+```jsx
+// HTML:
+<ui-sheet>
+  <form method="dialog">
+    <textbox placeholder="Your feedback" required></textbox>
+    <button type="submit">Send</button>
+  </form>
+</ui-sheet>
+
+// JavaScript:
+sheet.addEventListener("cancel", event => {
+  const userWantsToClose = confirm("Are you sure you want to close the form without submition?")
+  if (!userWantsToClose) {
+    // the sheet is not going to be closed
+    event.preventDefault()
+  }
+})
+```
+
+</details>
+
+<details open>
 <summary><b>Example:</b> Open the sheet programmatically</summary>
 
 ```jsx
@@ -118,6 +142,15 @@ Options for behavior customization
 ```
 
 </details>
+
+
+## `returnValue`
+
+Gets or sets the return value for the sheet, usually to indicate which button the user pressed to close it.
+
+**see**: https://developer.mozilla.org/en-US/docs/Web/API/HTMLDialogElement/returnValue
+
+**type**: string
 
 
 ## `showModal(): void`

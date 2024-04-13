@@ -76,9 +76,10 @@ styleSheet.replaceSync(`
     transform: translateY(0) scale(1);
 
     min-width: 18rem;
-    max-width: 70rem;
+    width: 90vw;
+
+    min-height: 30vh;
     max-height: 100vh;
-    height: 90vh;
 
     box-sizing: border-box;
 
@@ -157,6 +158,7 @@ styleSheet.replaceSync(`
     }
 
     .sheet-contents {
+      width: auto;
       max-width: 48rem;
       max-height: 32rem;
       border-radius: var(--sheet-border-radius);
@@ -171,4 +173,3 @@ styleSheet.replaceSync(`
     }
   }
 `)
-
