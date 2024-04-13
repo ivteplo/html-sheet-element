@@ -83,7 +83,7 @@ export class SheetElement extends HTMLElement {
    * Gray area on the top of the sheet to resize the sheet
    * @type {HTMLElement}
    */
-  #draggableArea
+  #handle
 
   #scaleDownTo
 
@@ -175,12 +175,12 @@ export class SheetElement extends HTMLElement {
           </div>
 
           <div
-            class="sheet-draggable-area"
-            reference={area => this.#draggableArea = area}
+            class="sheet-handle-container"
+            reference={area => this.#handle = area}
             onMouseDown={this.#eventListeners.onDragStart}
             onTouchStart={this.#eventListeners.onDragStart}
           >
-            <div class="sheet-draggable-thumb"></div>
+            <div class="sheet-handle"></div>
           </div>
 
           <div class="sheet-button-area">
@@ -365,7 +365,7 @@ export class SheetElement extends HTMLElement {
   #onDragStart(event) {
     this.#dragPosition = touchPosition(event).pageY
     this.#sheet.classList.add("is-resized")
-    this.#draggableArea.style.cursor = document.body.style.cursor = "grabbing"
+    this.#handle.style.cursor = document.body.style.cursor = "grabbing"
 
     this.#scaleDownTo = +getCSSVariableValue(this.#sheet, "--scale-down-to")
   }
@@ -406,7 +406,7 @@ export class SheetElement extends HTMLElement {
       this.close()
     }
 
-    this.#draggableArea.style.cursor = document.body.style.cursor = ""
+    this.#handle.style.cursor = document.body.style.cursor = ""
     this.#dragPosition = undefined
 
     this.#sheet.classList.remove("is-resized")
