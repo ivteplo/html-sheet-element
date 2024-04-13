@@ -17,7 +17,7 @@ customElements.define("ui-sheet", SheetElement)
 </details>
 
 <details open>
-<summary><b>Example:</b> Sheet open by default</summary>
+<summary><b>Example:</b> Open the sheet by default</summary>
 
 ```jsx
 <ui-sheet open>
@@ -45,6 +45,30 @@ sheet.addEventListener("close", event => {
 </details>
 
 <details open>
+<summary><b>Example:</b> Confirm whether the user actually wants to close a sheet without submition</summary>
+
+```jsx
+// HTML:
+<ui-sheet>
+  <form method="dialog">
+    <textbox placeholder="Your feedback" required></textbox>
+    <button type="submit">Send</button>
+  </form>
+</ui-sheet>
+
+// JavaScript:
+sheet.addEventListener("cancel", event => {
+  const userWantsToClose = confirm("Are you sure you want to close the form without submition?")
+  if (!userWantsToClose) {
+    // the sheet is not going to be closed
+    event.preventDefault()
+  }
+})
+```
+
+</details>
+
+<details open>
 <summary><b>Example:</b> Open the sheet programmatically</summary>
 
 ```jsx
@@ -57,16 +81,40 @@ sheet.show()
 
 </details>
 
+<details open>
+<summary><b>Example:</b> Show a title in the sheet header</summary>
+
+```jsx
+<ui-sheet>
+  <h2 slot="title-area">Title</h2>
+  <!-- ... -->
+</ui-sheet>
+```
+
+</details>
+
+<details open>
+<summary><b>Example:</b> Replace a button in the sheet header</summary>
+
+```jsx
+<ui-sheet id="sheet">
+  <button slot="button-area" type="button" aria-controls="sheet" onclick="sheet.close()">Close</button>
+  <!-- ... -->
+</ui-sheet>
+```
+
+</details>
+
 
 ## `options`
 
 Options for behavior customization
 
 <details open>
-<summary><b>Example:</b> Make the sheet <i>not</i> close on background click</summary>
+<summary><b>Example:</b> Make the sheet <i>not</i> close on backdrop click</summary>
 
 ```jsx
-<ui-sheet ignore-background-click>
+<ui-sheet ignore-backdrop-click>
   ...
 </ui-sheet>
 ```
@@ -83,6 +131,26 @@ Options for behavior customization
 ```
 
 </details>
+
+<details open>
+<summary><b>Example:</b> Make the sheet <i>not</i> close when dragging it down</summary>
+
+```jsx
+<ui-sheet ignore-dragging-down>
+  ...
+</ui-sheet>
+```
+
+</details>
+
+
+## `returnValue`
+
+Gets or sets the return value for the sheet, usually to indicate which button the user pressed to close it.
+
+**see**: https://developer.mozilla.org/en-US/docs/Web/API/HTMLDialogElement/returnValue
+
+**type**: string
 
 
 ## `showModal(): void`
@@ -113,7 +181,7 @@ An alternative way to open or close the sheet
 <summary><b>Example</b></summary>
 
 ```jsx
-sheet.open = true  // the same as executing sheet.showModal()
+sheet.open = true  // the same as executing sheet.show()
 sheet.open = false // the same as executing sheet.close()
 ```
 

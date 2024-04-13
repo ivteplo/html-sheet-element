@@ -8,12 +8,60 @@ export default styleSheet
 
 styleSheet.replaceSync(`
   :host {
-    --overlay-color: #88888880;
-    --sheet-background-color: #fff;
-    --sheet-thumb-color: #eee;
-    --sheet-transition-duration: 0.5s;
-    --sheet-border-radius: 1rem;
+    --_sheet-foreground-color: var(--sheet-foreground-color, inherit);
+    --_sheet-background-color: var(--sheet-background-color, #fff);
 
+    --_sheet-border-radius: var(--sheet-border-radius, 1rem);
+
+    --_sheet-min-width: var(--sheet-min-width, 18rem);
+    --_sheet-width: var(--sheet-width, 90vw);
+    --_sheet-max-width: var(--sheet-max-width, auto);
+
+    --_sheet-min-height: var(--sheet-min-height, 30vh);
+    --_sheet-height: var(--sheet-height, auto);
+    --_sheet-max-height: var(--sheet-max-height, 100vh);
+
+    --_sheet-scale-down-to: 0.5;
+    --_sheet-z-index: var(--sheet-z-index, 1);
+    --_sheet-transition-duration: var(--sheet-transition-duration, 0.5s);
+
+    --_sheet-backdrop-color: var(--sheet-backdrop-color, #88888880);
+
+    --_sheet-header-padding: var(--sheet-header-padding, 0 0 0 1rem);
+    --_sheet-title-margin: var(--sheet-title-margin, 0.5rem 0);
+    --_sheet-body-padding: var(--sheet-body-padding, 0 1rem 1rem 1rem);
+
+    --_sheet-handle-width: var(--sheet-handle-width, 3rem);
+    --_sheet-handle-height: var(--sheet-handle-height, 0.25rem);
+    --_sheet-handle-color: var(--sheet-handle-color, #eee);
+    --_sheet-handle-border-radius: var(--sheet-handle-border-radius, 0.125rem);
+    --_sheet-handle-container-padding: var(--sheet-handle-container-padding, 1rem);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :host {
+      --_sheet-background-color: var(--sheet-background-color, black);
+      --_sheet-foreground-color: var(--sheet-foreground-color, white);
+      --_sheet-handle-color: var(--sheet-handle-color, #333333);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    :host {
+      --_sheet-transition-duration: var(--sheet-transition-duration, 0.1s);
+    }
+  }
+
+  /* tablet */
+  @media (min-width: 48rem) {
+    :host {
+      --_sheet-width: var(--sheet-width, auto);
+      --_sheet-max-width: var(--sheet-max-width, 48rem);
+      --_sheet-max-height: var(--sheet-max-height, 32rem);
+    }
+  }
+
+  :host {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -24,11 +72,11 @@ styleSheet.replaceSync(`
     left: 0;
     right: 0;
     bottom: 0;
-    z-index: 2;
+    z-index: var(--_sheet-z-index);
 
     transition:
-      opacity var(--sheet-transition-duration),
-      visibility var(--sheet-transition-duration);
+      opacity var(--_sheet-transition-duration),
+      visibility var(--_sheet-transition-duration);
   }
 
   :host(:not([open])) {
@@ -37,59 +85,45 @@ styleSheet.replaceSync(`
     pointer-events: none;
   }
 
-  @media (prefers-color-scheme: dark) {
-    :host {
-      --sheet-background-color: black;
-      --sheet-foreground-color: white;
-      --sheet-thumb-color: #333333;
-    }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    :host {
-      --sheet-transition-duration: 0.1s;
-    }
-  }
-
   /* ::backdrop is not supported :( */
-  :host::before {
-    content: "";
+  .sheet-backdrop {
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: var(--overlay-color, rgba(0, 0, 0, 0.5));
+    background-color: var(--_sheet-backdrop-color);
   }
 
   .sheet-contents {
     display: flex;
     flex-direction: column;
 
-    border-radius: var(--sheet-border-radius) var(--sheet-border-radius) 0 0;
+    border-radius: var(--_sheet-border-radius) var(--_sheet-border-radius) 0 0;
 
-    background: var(--sheet-background-color);
+    background: var(--_sheet-background-color);
 
     overflow-y: hidden;
 
     transform: translateY(0) scale(1);
 
-    min-width: 18rem;
-    max-width: 70rem;
-    max-height: 100vh;
-    height: 90vh;
+    min-width: var(--_sheet-min-width);
+    width: var(--_sheet-width);
+    max-width: var(--_sheet-max-width);
+
+    min-height: var(--_sheet-min-height);
+    height: var(--_sheet-height);
+    max-height: var(--_sheet-max-height);
 
     box-sizing: border-box;
 
-    --scale-down-to: 0.5;
-
     transition:
-      transform var(--sheet-transition-duration),
-      border-radius var(--sheet-transition-duration);
+      transform var(--_sheet-transition-duration),
+      border-radius var(--_sheet-transition-duration);
   }
 
   :host(:not([open])) .sheet-contents {
-    transform: translateY(100%) scale(var(--scale-down-to));
+    transform: translateY(100%) scale(var(--_sheet-scale-down-to));
   }
 
   .sheet-contents.is-resized {
@@ -97,21 +131,46 @@ styleSheet.replaceSync(`
   }
 
   .sheet-controls {
-    display: flex;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: stretch;
+    padding: var(--_sheet-header-padding);
   }
 
-  .sheet-draggable-area {
-    width: 3rem;
+  .sheet-title-area {
+    display: flex;
+    justify-content: flex-start;
+  }
+
+  .sheet-title-area:not(:empty) {
+    padding: var(--_sheet-title-margin);
+  }
+
+  .sheet-handle-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    min-height: var(--_sheet-handle-height);
+    height: 100%;
+
+    padding: var(--_sheet-handle-container-padding);
+    box-sizing: border-box;
+
     margin: auto;
-    padding: 1rem;
     cursor: grab;
   }
 
-  .sheet-draggable-thumb {
-    width:inherit;
-    height: 0.25rem;
-    background: var(--sheet-thumb-color);
-    border-radius: 0.125rem;
+  .sheet-handle {
+    width: var(--_sheet-handle-width);
+    height: var(--_sheet-handle-height);
+    background: var(--_sheet-handle-color);
+    border-radius: var(--_sheet-handle-border-radius);
+  }
+
+  .sheet-button-area {
+    display: flex;
+    justify-content: flex-end;
   }
 
   .sheet-close-button {
@@ -132,7 +191,7 @@ styleSheet.replaceSync(`
 
     overflow-y: auto;
 
-    padding: 1rem;
+    padding: var(--_sheet-body-padding);
     box-sizing: border-box;
   }
 
@@ -143,19 +202,15 @@ styleSheet.replaceSync(`
     }
 
     .sheet-contents {
-      max-width: 48rem;
-      max-height: 32rem;
-      border-radius: var(--sheet-border-radius);
+      border-radius: var(--_sheet-border-radius);
     }
 
-    .sheet-draggable-area {
+    .sheet-handle-container {
       display: none;
     }
 
     .sheet-controls {
-      justify-content: flex-end;
+      grid-template-columns: 1fr auto auto;
     }
   }
-
 `)
-

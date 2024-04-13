@@ -19,7 +19,7 @@ import { styleSheet } from "./styleSheet.js"
  *   <p>Hello World!</p>
  * </ui-sheet>
  *
- * @example <caption>Sheet open by default</caption>
+ * @example <caption>Open the sheet by default</caption>
  * <ui-sheet open>
  *   <p>Hello World!</p>
  * </ui-sheet>
@@ -35,12 +35,42 @@ import { styleSheet } from "./styleSheet.js"
  *   console.log("The sheet is now closed")
  * })
  *
+ * @example <caption>Confirm whether the user actually wants to close a sheet without submition</caption>
+ * // HTML:
+ * <ui-sheet>
+ *   <form method="dialog">
+ *     <textbox placeholder="Your feedback" required></textbox>
+ *     <button type="submit">Send</button>
+ *   </form>
+ * </ui-sheet>
+ *
+ * // JavaScript:
+ * sheet.addEventListener("cancel", event => {
+ *   const userWantsToClose = confirm("Are you sure you want to close the form without submition?")
+ *   if (!userWantsToClose) {
+ *     // the sheet is not going to be closed
+ *     event.preventDefault()
+ *   }
+ * })
+ *
  * @example <caption>Open the sheet programmatically</caption>
  * const sheet = document.querySelector("...")
  *
  * sheet.showModal()
  * // is the same as:
  * sheet.show()
+ *
+ * @example <caption>Show a title in the sheet header</caption>
+ * <ui-sheet>
+ *   <h2 slot="title-area">Title</h2>
+ *   <!-- ... -->
+ * </ui-sheet>
+ *
+ * @example <caption>Replace a button in the sheet header</caption>
+ * <ui-sheet id="sheet">
+ *   <button slot="button-area" type="button" aria-controls="sheet" onclick="sheet.close()">Close</button>
+ *   <!-- ... -->
+ * </ui-sheet>
  */
 export class SheetElement extends HTMLElement {
   /**
@@ -53,7 +83,7 @@ export class SheetElement extends HTMLElement {
    * Gray area on the top of the sheet to resize the sheet
    * @type {HTMLElement}
    */
-  #draggableArea
+  #handle
 
   #scaleDownTo
 
@@ -64,14 +94,15 @@ export class SheetElement extends HTMLElement {
     onDragEnd: this.#onDragEnd.bind(this),
     onKeyUp: this.#onKeyUp.bind(this),
     onCloseButtonClick: this.#onCloseButtonClick.bind(this),
-    onClick: this.#onClick.bind(this)
+    onBackdropClick: this.#onBackdropClick.bind(this),
+    onSubmit: this.#onSubmit.bind(this)
   }
 
   /**
    * Options for behavior customization
    *
-   * @example <caption>Make the sheet <i>not</i> close on background click</caption>
-   * <ui-sheet ignore-background-click>
+   * @example <caption>Make the sheet <i>not</i> close on backdrop click</caption>
+   * <ui-sheet ignore-backdrop-click>
    *   ...
    * </ui-sheet>
    *
@@ -79,24 +110,39 @@ export class SheetElement extends HTMLElement {
    * <ui-sheet ignore-escape-key>
    *   ...
    * </ui-sheet>
+   *
+   * @example <caption>Make the sheet <i>not</i> close when dragging it down</caption>
+   * <ui-sheet ignore-dragging-down>
+   *   ...
+   * </ui-sheet>
    */
   options = {
-    closeOnBackgroundClick: true,
-    closeOnEscapeKey: true
+    closeOnBackdropClick: true,
+    closeOnEscapeKey: true,
+    closeOnDraggingDown: true
   }
+
+  /**
+   * Gets or sets the return value for the sheet, usually to indicate which button the user pressed to close it.
+   * @see https://developer.mozilla.org/en-US/docs/Web/API/HTMLDialogElement/returnValue
+   * @type {string}
+   */
+  returnValue = ""
 
   constructor() {
     super()
 
     this.role = "dialog"
+    this.ariaModal = true
+    this.addEventListener("submit", this.#eventListeners.onSubmit)
 
     Object.defineProperties(this.options, {
-      closeOnBackgroundClick: {
+      closeOnBackdropClick: {
         get: () =>
-          !this.hasAttribute("ignore-background-click"),
+          !this.hasAttribute("ignore-backdrop-click"),
         set: value => Boolean(value)
-          ? this.removeAttribute("ignore-background-click")
-          : this.setAttribute("ignore-background-click", true)
+          ? this.removeAttribute("ignore-backdrop-click")
+          : this.setAttribute("ignore-backdrop-click", true)
       },
       closeOnEscapeKey: {
         get: () =>
@@ -104,6 +150,13 @@ export class SheetElement extends HTMLElement {
         set: value => Boolean(value)
           ? this.removeAttribute("ignore-escape-key")
           : this.setAttribute("ignore-escape-key", true)
+      },
+      closeOnDraggingDown: {
+        get: () =>
+          !this.hasAttribute("ignore-dragging-down"),
+        set: value => Boolean(value)
+          ? this.removeAttribute("ignore-dragging-down")
+          : this.setAttribute("ignore-dragging-down", true)
       }
     })
 
@@ -114,42 +167,58 @@ export class SheetElement extends HTMLElement {
     shadowRoot.adoptedStyleSheets = [styleSheet]
 
     shadowRoot.append(
+      <div class="sheet-backdrop" onClick={this.#eventListeners.onBackdropClick} />,
       <div class="sheet-contents" reference={sheet => this.#sheet = sheet}>
         <header class="sheet-controls">
+          <div class="sheet-title-area">
+            <slot name="title-area" />
+          </div>
+
           <div
-            class="sheet-draggable-area"
-            reference={area => this.#draggableArea = area}
+            class="sheet-handle-container"
+            reference={area => this.#handle = area}
             onMouseDown={this.#eventListeners.onDragStart}
             onTouchStart={this.#eventListeners.onDragStart}
           >
-            <div class="sheet-draggable-thumb"></div>
+            <div class="sheet-handle"></div>
           </div>
 
-          <button
-            type="button"
-            aria-controls={this?.id ?? ""}
-            class="sheet-close-button"
-            onClick={this.#eventListeners.onCloseButtonClick}
-            title="Close the sheet"
-          >
-            &times;
-          </button>
+          <div class="sheet-button-area">
+            <slot name="button-area">
+              <button
+                type="button"
+                aria-controls={this?.id ?? ""}
+                class="sheet-close-button"
+                onClick={this.#eventListeners.onCloseButtonClick}
+                title="Close the sheet"
+              >
+                &times;
+              </button>
+            </slot>
+          </div>
         </header>
         <main class="sheet-body">
           <slot />
         </main>
       </div>
     )
-
-    this.addEventListener("click", this.#onClick)
   }
 
   /**
    * Open the sheet
    */
   showModal() {
-    this.setAttribute("open", true)
-    this.dispatchEvent(new CustomEvent("open"))
+    if (!this.hasAttribute("open")) {
+      this.setAttribute("open", true)
+      this.ariaHidden = false
+
+      const event = new CustomEvent("open", {
+        bubbles: false,
+        cancelable: false
+      })
+
+      this.dispatchEvent(event)
+    }
   }
 
   /**
@@ -163,8 +232,39 @@ export class SheetElement extends HTMLElement {
    * Collapse the sheet
    */
   close() {
+    if (!this.hasAttribute("open")) {
+      return
+    }
+
     this.removeAttribute("open")
-    this.dispatchEvent(new CustomEvent("close"))
+    this.ariaHidden = true
+
+    const event = new CustomEvent("close", {
+      bubbles: false,
+      cancelable: false
+    })
+
+    this.dispatchEvent(event)
+  }
+
+  /**
+   * Close the sheet when the form hasn't been submitted
+   */
+  #cancelAndCloseIfApplicable() {
+    if (!this.hasAttribute("open")) {
+      return
+    }
+
+    const event = new CustomEvent("cancel", {
+      bubbles: false,
+      cancelable: true
+    })
+
+    const isDefaultBehaviorNotPrevented = this.dispatchEvent(event)
+
+    if (isDefaultBehaviorNotPrevented) {
+      this.close()
+    }
   }
 
   /**
@@ -194,15 +294,30 @@ export class SheetElement extends HTMLElement {
   }
 
   /**
-   * Hide the sheet when clicking at the background
-   * @param {PointerEvent} event
+   * On submit of a form inside of the sheet
+   * @param {SubmitEvent} event
    * @returns {void}
    */
-  #onClick(event) {
-    const path = event.composedPath()
+  #onSubmit(event) {
+    const form = event.target
+    const button = event.submitter
 
-    if (!path.find(item => item === this.#sheet) && this.options.closeOnBackgroundClick) {
+    if (form?.method === "dialog" || button?.formMethod === "dialog") {
+      event.stopImmediatePropagation()
+      event.preventDefault()
+
+      this.returnValue = button?.value ?? ""
       this.close()
+    }
+  }
+
+  /**
+   * Hide the sheet when clicking at the backdrop
+   * @returns {void}
+   */
+  #onBackdropClick() {
+    if (this.options.closeOnBackdropClick) {
+      this.#cancelAndCloseIfApplicable()
     }
   }
 
@@ -211,7 +326,7 @@ export class SheetElement extends HTMLElement {
    * @returns {void}
    */
   #onCloseButtonClick() {
-    this.close()
+    this.#cancelAndCloseIfApplicable()
   }
 
   /**
@@ -224,7 +339,7 @@ export class SheetElement extends HTMLElement {
       elementContains(event.target, this) && isFocused(event.target)
 
     if (event.key === "Escape" && !isSheetElementFocused && this.options.closeOnEscapeKey) {
-      this.close()
+      this.#cancelAndCloseIfApplicable()
     }
   }
 
@@ -250,7 +365,7 @@ export class SheetElement extends HTMLElement {
   #onDragStart(event) {
     this.#dragPosition = touchPosition(event).pageY
     this.#sheet.classList.add("is-resized")
-    this.#draggableArea.style.cursor = document.body.style.cursor = "grabbing"
+    this.#handle.style.cursor = document.body.style.cursor = "grabbing"
 
     this.#scaleDownTo = +getCSSVariableValue(this.#sheet, "--scale-down-to")
   }
@@ -287,11 +402,11 @@ export class SheetElement extends HTMLElement {
     const distanceToTheBottomInPercents =
       this.#getDistanceToTheBottomInPercents(touchPosition(event).pageY)
 
-    if (distanceToTheBottomInPercents < 75) {
+    if (distanceToTheBottomInPercents < 75 && this.options.closeOnDraggingDown) {
       this.close()
     }
 
-    this.#draggableArea.style.cursor = document.body.style.cursor = ""
+    this.#handle.style.cursor = document.body.style.cursor = ""
     this.#dragPosition = undefined
 
     this.#sheet.classList.remove("is-resized")
@@ -330,4 +445,3 @@ export class SheetElement extends HTMLElement {
 }
 
 export default SheetElement
-

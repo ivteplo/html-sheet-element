@@ -42,16 +42,23 @@ input,
 textarea,
 [contenteditable="true"] {
   box-sizing: border-box;
-  padding: 1rem;
+  padding: 0.5rem 1rem;
 
-  border-radius: 1rem;
+  border-radius: 0.5rem;
   border: 0.0625rem solid var(--section-divider-color);
+
+  box-shadow: 0 0.125rem 0.25rem var(--section-divider-color);
 
   font-family: inherit;
   font-size: 1rem;
 
   background: var(--page-background-color);
   color: var(--page-foreground-color);
+}
+
+button.text-only {
+  box-shadow: none;
+  border: none;
 }
 
 textarea {
@@ -69,5 +76,17 @@ button {
 }
 
 form {
-  gap: 1rem;
+  gap: 0.5rem;
+}
+
+form > div {
+  gap: 0.25rem;
+}
+
+form label {
+  font-weight: 500;
+}
+
+ui-sheet button {
+  font-weight: 600;
 }
