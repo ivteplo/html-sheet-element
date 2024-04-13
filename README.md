@@ -1,12 +1,12 @@
 # HTML Sheet Element
 
-HTML Custom Element for creating sheets. Displayed as a bottom sheet on mobile and centered sheet on desktop.
+HTML Custom Element for creating sheets. Displayed as a bottom sheet on mobile and a centered sheet on desktop.
 
 
 ## Features
 
-- There is a draggable area to open or close the sheet
-- The sheet can be closed using a button in the top right corner, using the `Esc` key, or by clicking outside the bottom sheet
+- There is a handle at the top of the sheet that can be used to open or close the sheet
+- The sheet can be closed using a button in the sheet header, using the `Esc` key, or by clicking outside the bottom sheet
   - This behavior is configurable. You can turn off the `Esc` or the click outside the sheet when you want.
 - API is similar to the `<dialog>` element's
   - Supports forms inside of it

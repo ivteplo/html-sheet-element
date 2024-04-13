@@ -24,11 +24,11 @@
     <button type="button" id="open-sheet" aria-controls="sheet">Open the Sheet</button>
 
     <ui-sheet id="sheet" style="--sheet-body-padding: 0 1rem 1rem 1rem;">
-      <h2 slot="title-area" style="padding-block: 0.5rem">Contact</h2>
+      <h2 slot="title-area">Contact</h2>
       <form method="dialog" class="column">
         <div class="column">
-          <label for="email">Email</label>
-          <input name="email" id="email" type="email" placeholder="Your email" required>
+          <label for="email">Recepient</label>
+          <input name="email" id="email" type="email" placeholder="Recepient's email" required>
         </div>
         <div class="column">
           <label for="subject">Subject</label>
@@ -38,7 +38,6 @@
           <label for="message">Message</label>
           <textarea name="message" placeholder="Your message"></textarea>
         </div>
-        <!-- <div contenteditable="true">Contenteditable block</div> -->
         <button type="submit" value="send">Send</button>
       </form>
     </ui-sheet>
