@@ -29,7 +29,7 @@ styleSheet.replaceSync(`
 
     --_sheet-header-padding: var(--sheet-header-padding, 0 0 0 1rem);
     --_sheet-title-margin: var(--sheet-title-margin, 0.5rem 0);
-    --_sheet-body-padding: var(--sheet-body-padding, 1rem);
+    --_sheet-body-padding: var(--sheet-body-padding, 0 1rem 1rem 1rem);
 
     --_sheet-handle-width: var(--sheet-handle-width, 3rem);
     --_sheet-handle-height: var(--sheet-handle-height, 0.25rem);

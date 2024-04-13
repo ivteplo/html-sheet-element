@@ -47,11 +47,18 @@ textarea,
   border-radius: 0.5rem;
   border: 0.0625rem solid var(--section-divider-color);
 
+  box-shadow: 0 0.125rem 0.25rem var(--section-divider-color);
+
   font-family: inherit;
   font-size: 1rem;
 
   background: var(--page-background-color);
   color: var(--page-foreground-color);
+}
+
+button.text-only {
+  box-shadow: none;
+  border: none;
 }
 
 textarea {
@@ -78,4 +85,8 @@ form > div {
 
 form label {
   font-weight: 500;
+}
+
+ui-sheet button {
+  font-weight: 600;
 }
