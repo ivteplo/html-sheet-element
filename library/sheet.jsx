@@ -129,36 +129,10 @@ export class SheetElement extends HTMLElement {
    */
   returnValue = ""
 
+  #performedInitialization = false
+
   constructor() {
     super()
-
-    this.role = "dialog"
-    this.ariaModal = true
-    this.addEventListener("submit", this.#eventListeners.onSubmit)
-
-    Object.defineProperties(this.options, {
-      closeOnBackdropClick: {
-        get: () =>
-          !this.hasAttribute("ignore-backdrop-click"),
-        set: value => Boolean(value)
-          ? this.removeAttribute("ignore-backdrop-click")
-          : this.setAttribute("ignore-backdrop-click", true)
-      },
-      closeOnEscapeKey: {
-        get: () =>
-          !this.hasAttribute("ignore-escape-key"),
-        set: value => Boolean(value)
-          ? this.removeAttribute("ignore-escape-key")
-          : this.setAttribute("ignore-escape-key", true)
-      },
-      closeOnDraggingDown: {
-        get: () =>
-          !this.hasAttribute("ignore-dragging-down"),
-        set: value => Boolean(value)
-          ? this.removeAttribute("ignore-dragging-down")
-          : this.setAttribute("ignore-dragging-down", true)
-      }
-    })
 
     const shadowRoot = this.attachShadow({
       mode: "open"
@@ -202,6 +176,66 @@ export class SheetElement extends HTMLElement {
         </main>
       </div>
     )
+  }
+
+  /**
+   * Attaches event listeners to the window when the sheet is mounted
+   * @ignore
+   */
+  connectedCallback() {
+    if (!(this.#performedInitialization)) {
+      this.role = "dialog"
+      this.ariaModal = true
+      this.addEventListener("submit", this.#eventListeners.onSubmit)
+
+      Object.defineProperties(this.options, {
+        closeOnBackdropClick: {
+          get: () =>
+            !this.hasAttribute("ignore-backdrop-click"),
+          set: value => Boolean(value)
+            ? this.removeAttribute("ignore-backdrop-click")
+            : this.setAttribute("ignore-backdrop-click", true)
+        },
+        closeOnEscapeKey: {
+          get: () =>
+            !this.hasAttribute("ignore-escape-key"),
+          set: value => Boolean(value)
+            ? this.removeAttribute("ignore-escape-key")
+            : this.setAttribute("ignore-escape-key", true)
+        },
+        closeOnDraggingDown: {
+          get: () =>
+            !this.hasAttribute("ignore-dragging-down"),
+          set: value => Boolean(value)
+            ? this.removeAttribute("ignore-dragging-down")
+            : this.setAttribute("ignore-dragging-down", true)
+        }
+      })
+
+      this.#performedInitialization = true
+    }
+
+    window.addEventListener("keyup", this.#eventListeners.onKeyUp)
+
+    window.addEventListener("mousemove", this.#eventListeners.onDragMove)
+    window.addEventListener("touchmove", this.#eventListeners.onDragMove)
+
+    window.addEventListener("mouseup", this.#eventListeners.onDragEnd)
+    window.addEventListener("touchend", this.#eventListeners.onDragEnd)
+  }
+
+  /**
+   * Removes all the event listeners when the sheet is no longer mounted
+   * @ignore
+   */
+  disconnectedCallback() {
+    window.removeEventListener("keyup", this.#eventListeners.onKeyUp)
+
+    window.removeEventListener("mousemove", this.#eventListeners.onDragMove)
+    window.removeEventListener("touchmove", this.#eventListeners.onDragMove)
+
+    window.removeEventListener("mouseup", this.#eventListeners.onDragEnd)
+    window.removeEventListener("touchend", this.#eventListeners.onDragEnd)
   }
 
   /**
@@ -413,34 +447,6 @@ export class SheetElement extends HTMLElement {
 
     this.#sheet.style.transform = ""
     this.#sheet.style.transition = ""
-  }
-
-  /**
-   * Attaches event listeners to the window when the sheet is mounted
-   * @ignore
-   */
-  connectedCallback() {
-    window.addEventListener("keyup", this.#eventListeners.onKeyUp)
-
-    window.addEventListener("mousemove", this.#eventListeners.onDragMove)
-    window.addEventListener("touchmove", this.#eventListeners.onDragMove)
-
-    window.addEventListener("mouseup", this.#eventListeners.onDragEnd)
-    window.addEventListener("touchend", this.#eventListeners.onDragEnd)
-  }
-
-  /**
-   * Removes all the event listeners when the sheet is no longer mounted
-   * @ignore
-   */
-  disconnectedCallback() {
-    window.removeEventListener("keyup", this.#eventListeners.onKeyUp)
-
-    window.removeEventListener("mousemove", this.#eventListeners.onDragMove)
-    window.removeEventListener("touchmove", this.#eventListeners.onDragMove)
-
-    window.removeEventListener("mouseup", this.#eventListeners.onDragEnd)
-    window.removeEventListener("touchend", this.#eventListeners.onDragEnd)
   }
 }
 
