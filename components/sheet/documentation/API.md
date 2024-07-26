@@ -186,3 +186,19 @@ sheet.open = false // the same as executing sheet.close()
 ```
 
 </details>
+
+
+
+# `defineAs(tag: string): void`
+
+Function to define the sheet element in the HTML Custom Element Registry
+
+<details open>
+<summary><b>Example</b></summary>
+
+```jsx
+import { defineAs } from "@ivteplo/html-sheet-element"
+defineAs("ui-sheet")
+```
+
+</details>

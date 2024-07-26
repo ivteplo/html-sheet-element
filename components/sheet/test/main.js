@@ -3,10 +3,8 @@
 // Licensed under the Apache license 2.0
 //
 
-import SheetElement from "../library/sheet"
-
-
-customElements.define("ui-sheet", SheetElement)
+import { defineAs } from "../library/index.js"
+defineAs("ui-sheet")
 
 const openSheetButton = document.getElementById("open-sheet")
 const sheet = document.getElementById("sheet")
