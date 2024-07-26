@@ -5,7 +5,8 @@
 
 /** @jsx createElement */
 
-import { isFocused, touchPosition, getCSSVariableValue, mapNumber, createElement, elementContains } from "./helpers.js"
+import { isFocused, touchPosition, getCSSVariableValue, createElement, elementContains } from "../../../shared/htmlHelpers.js"
+import { mapNumber } from "./helpers.js"
 import { styleSheet } from "./styleSheet.js"
 
 /**
