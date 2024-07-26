@@ -16,11 +16,11 @@ export const isFocused = element => document.activeElement === element
  * @returns {MouseEvent|Touch}
  */
 export const touchPosition = (event) =>
-  event.type === "touchend"
-    ? event.changedTouches[0]
-    : event.type.startsWith("touch")
-    ? event.touches[0]
-    : event
+	event.type === "touchend"
+		? event.changedTouches[0]
+		: event.type.startsWith("touch")
+		? event.touches[0]
+		: event
 
 
 /**
@@ -31,9 +31,9 @@ export const touchPosition = (event) =>
  * @returns {number} - value in the new interval
  */
 export function mapNumber(number, currentRange, newRange) {
-  const currentRangeSize = currentRange[1] - currentRange[0]
-  const newRangeSize = newRange[1] - newRange[0]
-  return (number - currentRange[0]) / currentRangeSize * newRangeSize + newRange[0]
+	const currentRangeSize = currentRange[1] - currentRange[0]
+	const newRangeSize = newRange[1] - newRange[0]
+	return (number - currentRange[0]) / currentRangeSize * newRangeSize + newRange[0]
 }
 
 /**
@@ -42,7 +42,7 @@ export function mapNumber(number, currentRange, newRange) {
  * @returns {string?}
  */
 export function getCSSVariableValue(element, variableName) {
-  return getComputedStyle(element).getPropertyValue(variableName)
+	return getComputedStyle(element).getPropertyValue(variableName)
 }
 
 /**
@@ -52,7 +52,7 @@ export function getCSSVariableValue(element, variableName) {
  * @returns {boolean}
  */
 export function elementContains(child, element) {
-  return element.contains(child) || element.shadowRoot?.contains(child)
+	return element.contains(child) || element.shadowRoot?.contains(child)
 }
 
 
@@ -66,48 +66,48 @@ const eventHandlerAttributePattern = /^on([A-Z][a-zA-Z]*)$/
  * @returns {ElementTagNameMap[Tag]|HTMLElement}
  */
 export function createElement(tagName, attributes, ...children) {
-  const element = document.createElement(tagName)
-  attributes ??= {}
+	const element = document.createElement(tagName)
+	attributes ??= {}
 
-  for (const [attribute, value] of Object.entries(attributes)) {
-    const eventHandlerPatternMatches = attribute.match(eventHandlerAttributePattern)
+	for (const [attribute, value] of Object.entries(attributes)) {
+		const eventHandlerPatternMatches = attribute.match(eventHandlerAttributePattern)
 
-    if (eventHandlerPatternMatches) {
-      const event = eventHandlerPatternMatches[1].toLowerCase()
-      element.addEventListener(event, value)
-    } else if (attribute === "reference") {
-      value?.(element)
-    } else {
-      element.setAttribute(attribute, value)
-    }
-  }
+		if (eventHandlerPatternMatches) {
+			const event = eventHandlerPatternMatches[1].toLowerCase()
+			element.addEventListener(event, value)
+		} else if (attribute === "reference") {
+			value?.(element)
+		} else {
+			element.setAttribute(attribute, value)
+		}
+	}
 
-  for (const child of children) {
-    switch (typeof child) {
-      case "undefined":
-        break
-      case "string":
-      case "number":
-      case "bigint":
-        element.appendChild(document.createTextNode(String(child)))
-        break
-      case "object":
-        if (child === null) {
-          break
-        }
+	for (const child of children) {
+		switch (typeof child) {
+			case "undefined":
+				break
+			case "string":
+			case "number":
+			case "bigint":
+				element.appendChild(document.createTextNode(String(child)))
+				break
+			case "object":
+				if (child === null) {
+					break
+				}
 
-        if (child instanceof HTMLElement) {
-          element.appendChild(child)
-          break
-        }
+				if (child instanceof HTMLElement) {
+					element.appendChild(child)
+					break
+				}
 
-        // Note: if the child is not of type HTMLElement,
-        // we will go into the default handler too
-      default:
-        throw new Error("Unexpected type of child: " + typeof child)
-    }
-  }
+				// Note: if the child is not of type HTMLElement,
+				// we will go into the default handler too
+			default:
+				throw new Error("Unexpected type of child: " + typeof child)
+		}
+	}
 
-  return element
+	return element
 }
 

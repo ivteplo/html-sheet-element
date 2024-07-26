@@ -7,17 +7,17 @@ import { defineConfig } from "vite"
 import { resolve } from "path"
 
 export default defineConfig({
-  root: __dirname,
-  css: {
-    modules: {
-      localsConvention: "camelCase"
-    }
-  },
-  build: {
-    outDir: resolve(__dirname, "./build/"),
-    cssCodeSplit: true,
-    rollupOptions: {
-      input: resolve(__dirname, "./index.html")
-    }
-  }
+	root: __dirname,
+	css: {
+		modules: {
+			localsConvention: "camelCase"
+		}
+	},
+	build: {
+		outDir: resolve(__dirname, "./build/"),
+		cssCodeSplit: true,
+		rollupOptions: {
+			input: resolve(__dirname, "./index.html")
+		}
+	}
 })
