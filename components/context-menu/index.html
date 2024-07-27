@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<!--
+	Copyright (c) 2024 Ivan Teplov
+	Licensed under the Apache license 2.0
+-->
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Context Menu</title>
+
+		<link rel="stylesheet" href="context-menu.css">
+		<script src="context-menu.js"></script>
+
+		<style>
+			html {
+				color-scheme: light dark;
+			}
+
+			* {
+				margin: 0;
+				padding: 0;
+			}
+
+			#wrapper {
+				padding: 1rem;
+				display: flex;
+				flex-direction: column;
+				gap: 1rem;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="wrapper">
+			<menu is="context-menu" id="contextMenu">
+				<details is="context-menu-group">
+					<summary>Text actions</summary>
+					<menu>
+						<button is="context-menu-item" keystroke="Ctrl+A" onclick="document.execCommand('selectAll')">Select all</button>
+						<button is="context-menu-item" onclick="wrapper.removeChild(document.querySelector('p'))">Delete a paragraph</button>
+					</menu>
+				</details>
+				<details is="context-menu-group">
+					<summary>Go to</summary>
+					<menu>
+						<details is="context-menu-group">
+							<summary>First paragraph</summary>
+							<menu>
+								<button is="context-menu-item">First sentence</button>
+								<button is="context-menu-item">Second sentence</button>
+							</menu>
+						</details>
+						<details is="context-menu-group">
+							<summary>Second paragraph</summary>
+							<menu>
+								<button is="context-menu-item">First sentence</button>
+								<button is="context-menu-item">Second sentence</button>
+							</menu>
+						</details>
+						<details is="context-menu-group">
+							<summary>Third paragraph</summary>
+							<menu>
+								<button is="context-menu-item">First sentence</button>
+								<button is="context-menu-item">Second sentence</button>
+							</menu>
+						</details>
+					</menu>
+				</details>
+				<hr>
+				<button is="context-menu-item" onclick="contextMenu.parentElement.removeChild(contextMenu)">Remove the custom context menu</button>
+			</menu>
+
+			<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nisi cumque saepe impedit cum sit quas recusandae quasi repudiandae veniam architecto odit labore dolore, distinctio ut eligendi ducimus facere dolor inventore quod quis soluta nam. Voluptatem, repellendus exercitationem pariatur provident in eos odio rerum dolorum molestiae ducimus nemo ad aperiam similique quisquam? Temporibus culpa mollitia fugiat ipsam vitae sequi qui iste autem natus provident. Neque ut vero explicabo cupiditate unde accusantium maiores incidunt quia error consectetur, sequi similique doloremque perferendis consequuntur debitis ex nam repudiandae non. Suscipit ex, quidem est exercitationem expedita veritatis? Commodi, optio. Harum, totam excepturi, inventore in, porro veritatis corrupti saepe velit fugiat eius consequuntur ipsam possimus. Ipsa dolor officia soluta perspiciatis vitae aliquid magnam. Repellendus incidunt sed, voluptate ea quod, fuga commodi quae cumque consectetur mollitia numquam ullam maxime. Ipsum et sunt iusto ea enim optio deleniti iste aliquid asperiores, neque, laudantium fugit exercitationem rem. Quidem, minus!</p>
+			<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nisi cumque saepe impedit cum sit quas recusandae quasi repudiandae veniam architecto odit labore dolore, distinctio ut eligendi ducimus facere dolor inventore quod quis soluta nam. Voluptatem, repellendus exercitationem pariatur provident in eos odio rerum dolorum molestiae ducimus nemo ad aperiam similique quisquam? Temporibus culpa mollitia fugiat ipsam vitae sequi qui iste autem natus provident. Neque ut vero explicabo cupiditate unde accusantium maiores incidunt quia error consectetur, sequi similique doloremque perferendis consequuntur debitis ex nam repudiandae non. Suscipit ex, quidem est exercitationem expedita veritatis? Commodi, optio. Harum, totam excepturi, inventore in, porro veritatis corrupti saepe velit fugiat eius consequuntur ipsam possimus. Ipsa dolor officia soluta perspiciatis vitae aliquid magnam. Repellendus incidunt sed, voluptate ea quod, fuga commodi quae cumque consectetur mollitia numquam ullam maxime. Ipsum et sunt iusto ea enim optio deleniti iste aliquid asperiores, neque, laudantium fugit exercitationem rem. Quidem, minus!</p>
+			<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nisi cumque saepe impedit cum sit quas recusandae quasi repudiandae veniam architecto odit labore dolore, distinctio ut eligendi ducimus facere dolor inventore quod quis soluta nam. Voluptatem, repellendus exercitationem pariatur provident in eos odio rerum dolorum molestiae ducimus nemo ad aperiam similique quisquam? Temporibus culpa mollitia fugiat ipsam vitae sequi qui iste autem natus provident. Neque ut vero explicabo cupiditate unde accusantium maiores incidunt quia error consectetur, sequi similique doloremque perferendis consequuntur debitis ex nam repudiandae non. Suscipit ex, quidem est exercitationem expedita veritatis? Commodi, optio. Harum, totam excepturi, inventore in, porro veritatis corrupti saepe velit fugiat eius consequuntur ipsam possimus. Ipsa dolor officia soluta perspiciatis vitae aliquid magnam. Repellendus incidunt sed, voluptate ea quod, fuga commodi quae cumque consectetur mollitia numquam ullam maxime. Ipsum et sunt iusto ea enim optio deleniti iste aliquid asperiores, neque, laudantium fugit exercitationem rem. Quidem, minus!</p>
+			<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nisi cumque saepe impedit cum sit quas recusandae quasi repudiandae veniam architecto odit labore dolore, distinctio ut eligendi ducimus facere dolor inventore quod quis soluta nam. Voluptatem, repellendus exercitationem pariatur provident in eos odio rerum dolorum molestiae ducimus nemo ad aperiam similique quisquam? Temporibus culpa mollitia fugiat ipsam vitae sequi qui iste autem natus provident. Neque ut vero explicabo cupiditate unde accusantium maiores incidunt quia error consectetur, sequi similique doloremque perferendis consequuntur debitis ex nam repudiandae non. Suscipit ex, quidem est exercitationem expedita veritatis? Commodi, optio. Harum, totam excepturi, inventore in, porro veritatis corrupti saepe velit fugiat eius consequuntur ipsam possimus. Ipsa dolor officia soluta perspiciatis vitae aliquid magnam. Repellendus incidunt sed, voluptate ea quod, fuga commodi quae cumque consectetur mollitia numquam ullam maxime. Ipsum et sunt iusto ea enim optio deleniti iste aliquid asperiores, neque, laudantium fugit exercitationem rem. Quidem, minus!</p>
+			<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nisi cumque saepe impedit cum sit quas recusandae quasi repudiandae veniam architecto odit labore dolore, distinctio ut eligendi ducimus facere dolor inventore quod quis soluta nam. Voluptatem, repellendus exercitationem pariatur provident in eos odio rerum dolorum molestiae ducimus nemo ad aperiam similique quisquam? Temporibus culpa mollitia fugiat ipsam vitae sequi qui iste autem natus provident. Neque ut vero explicabo cupiditate unde accusantium maiores incidunt quia error consectetur, sequi similique doloremque perferendis consequuntur debitis ex nam repudiandae non. Suscipit ex, quidem est exercitationem expedita veritatis? Commodi, optio. Harum, totam excepturi, inventore in, porro veritatis corrupti saepe velit fugiat eius consequuntur ipsam possimus. Ipsa dolor officia soluta perspiciatis vitae aliquid magnam. Repellendus incidunt sed, voluptate ea quod, fuga commodi quae cumque consectetur mollitia numquam ullam maxime. Ipsum et sunt iusto ea enim optio deleniti iste aliquid asperiores, neque, laudantium fugit exercitationem rem. Quidem, minus!</p>
+			<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nisi cumque saepe impedit cum sit quas recusandae quasi repudiandae veniam architecto odit labore dolore, distinctio ut eligendi ducimus facere dolor inventore quod quis soluta nam. Voluptatem, repellendus exercitationem pariatur provident in eos odio rerum dolorum molestiae ducimus nemo ad aperiam similique quisquam? Temporibus culpa mollitia fugiat ipsam vitae sequi qui iste autem natus provident. Neque ut vero explicabo cupiditate unde accusantium maiores incidunt quia error consectetur, sequi similique doloremque perferendis consequuntur debitis ex nam repudiandae non. Suscipit ex, quidem est exercitationem expedita veritatis? Commodi, optio. Harum, totam excepturi, inventore in, porro veritatis corrupti saepe velit fugiat eius consequuntur ipsam possimus. Ipsa dolor officia soluta perspiciatis vitae aliquid magnam. Repellendus incidunt sed, voluptate ea quod, fuga commodi quae cumque consectetur mollitia numquam ullam maxime. Ipsum et sunt iusto ea enim optio deleniti iste aliquid asperiores, neque, laudantium fugit exercitationem rem. Quidem, minus!</p>
+		</div>
+	</body>
+</html>
