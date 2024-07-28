@@ -17,7 +17,7 @@ export default defineConfig({
 		minify: false,
 		cssMinify: false,
 		lib: {
-			entry: resolve(__dirname, "./library/sheet.jsx"),
+			entry: resolve(__dirname, "./library/index.js"),
 			name: "SheetElement",
 			fileName: "index",
 		},
@@ -27,7 +27,7 @@ export default defineConfig({
 			// into your library
 			external: [],
 			output: {
-				exports: "named",
+				exports: "default",
 			}
 		}
 	}

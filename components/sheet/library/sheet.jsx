@@ -13,7 +13,8 @@ import { styleSheet } from "./styleSheet.js"
  * HTML Custom Element for creating sheets
  *
  * @example <caption>Define the element in the registry and use it in your HTML</caption>
- * customElements.define("ui-sheet", SheetElement)
+ * import SheetElement from "@ivteplo/html-sheet-element"
+ * SheetElement.defineAs("ui-sheet")
  *
  * // in HTML:
  * <ui-sheet>
@@ -74,6 +75,17 @@ import { styleSheet } from "./styleSheet.js"
  * </ui-sheet>
  */
 export class SheetElement extends HTMLElement {
+	/**
+	 * Function to define the sheet element in the HTML Custom Element Registry
+	 * @param {string} tag - the tag name for the sheet element
+	 * @example
+	 * import SheetElement from "@ivteplo/html-sheet-element"
+	 * SheetElement.defineAs("ui-sheet")
+	 */
+	static defineAs(tag) {
+		customElements.define(tag, this, {})
+	}
+
 	/**
 	 * Inner wrapper
 	 * @type {HTMLDivElement}

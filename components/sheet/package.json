@@ -20,13 +20,11 @@
   ],
   "main": "./build/index.umd.cjs",
   "module": "./build/index.js",
-  "style": "./build/index.css",
   "exports": {
     ".": {
       "require": "./build/index.umd.cjs",
       "import": "./build/index.js"
-    },
-    "./index.css": "./build/index.css"
+    }
   },
   "scripts": {
     "dev": "vite --config test/vite.config.js",
