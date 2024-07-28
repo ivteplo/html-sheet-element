@@ -3,6 +3,12 @@
 // Licensed under the Apache license 2.0
 //
 
+import { styleSheet } from "./styleSheet.js"
+
+if (document.adoptedStyleSheets.indexOf(styleSheet) === -1) {
+	document.adoptedStyleSheets.push(styleSheet)
+}
+
 /**
  * A context menu itself
  * @example
@@ -12,7 +18,20 @@
  *   <button is="context-menu-item">Paste</button>
  * </context-menu>
  */
-class ContextMenuElement extends HTMLMenuElement {
+export class ContextMenuElement extends HTMLMenuElement {
+	/**
+	 * Function to define the context menu element in the HTML Custom Element Registry
+	 * @param {string} tag - the tag name for the context menu
+	 * @example
+	 * import { ContextMenuElement } from "@ivteplo/html-context-menu-element"
+	 * ContextMenuElement.defineAs("context-menu")
+	 */
+	static defineAs(tag) {
+		customElements.define(tag, this, {
+			extends: "menu"
+		})
+	}
+
 	/**
 	 * Here we are going to store the parent element once the component gets mounted
 	 * so that we can remove all the event listeners once the component gets unmounted.
@@ -167,7 +186,20 @@ class ContextMenuElement extends HTMLMenuElement {
  * @example
  * <button is="context-menu-item">Button label</button>
  */
-class ContextMenuItemElement extends HTMLButtonElement {
+export class ContextMenuItemElement extends HTMLButtonElement {
+	/**
+	 * Function to define the context menu item element in the HTML Custom Element Registry
+	 * @param {string} tag - the tag name for the context menu item
+	 * @example
+	 * import { ContextMenuItemElement } from "@ivteplo/html-context-menu-element"
+	 * ContextMenuItemElement.defineAs("context-menu-item")
+	 */
+	static defineAs(tag) {
+		customElements.define(tag, this, {
+			extends: "button"
+		})
+	}
+
 	constructor() {
 		super()
 		this.type = "button"
@@ -197,7 +229,20 @@ class ContextMenuItemElement extends HTMLButtonElement {
  *     <button is="context-menu-item">Item 1</button>
  * </details>
  */
-class ContextMenuGroupElement extends HTMLDetailsElement {
+export class ContextMenuGroupElement extends HTMLDetailsElement {
+	/**
+	 * Function to define the context menu element in the HTML Custom Element Registry
+	 * @param {string} tag - the tag name for the context menu
+	 * @example
+	 * import { ContextMenuGroupElement } from "@ivteplo/html-context-menu-element"
+	 * ContextMenuGroupElement.defineAs("context-menu-group")
+	 */
+	static defineAs(tag) {
+		customElements.define(tag, this, {
+			extends: "details"
+		})
+	}
+
 	constructor() {
 		super()
 
@@ -302,10 +347,6 @@ class ContextMenuGroupElement extends HTMLDetailsElement {
 	}
 }
 
-customElements.define("context-menu", ContextMenuElement, { extends: "menu" })
-customElements.define("context-menu-item", ContextMenuItemElement, { extends: "button" })
-customElements.define("context-menu-group", ContextMenuGroupElement, { extends: "details" })
-
 /**
  * Tries to find a parent element that meets the specified criteria
  * @param {(parent: HTMLElement) => boolean} meetsCriteria
@@ -379,4 +420,3 @@ function getNextChildToFocusOnInsideOf(parent, focusedElement, isTheOneAfterCurr
 
 	return nextToFocus
 }
-
