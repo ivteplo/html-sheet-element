@@ -3,4 +3,4 @@
 // Licensed under the Apache license 2.0
 //
 
-export { default as default } from "./sheet.jsx"
+export { default as default, default as SheetElement } from "./sheet.jsx"

@@ -27,7 +27,7 @@ export default defineConfig({
 			// into your library
 			external: [],
 			output: {
-				exports: "default",
+				exports: "named",
 			}
 		}
 	}
