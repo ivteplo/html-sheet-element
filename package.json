@@ -1,8 +1,46 @@
 {
-  "name": "html-elements",
+  "name": "@ivteplo/html-sheet-element",
+  "description": "HTML Custom Element for Sheets",
   "author": "Ivan Teplov <iteplov7@gmail.com>",
+  "keywords": [
+    "bottom-sheet",
+    "sheet",
+    "html",
+    "web-components-api",
+    "web-components",
+    "html-custom-element",
+    "cross-framework"
+  ],
   "license": "Apache-2.0",
-  "workspaces": [
-    "components/*"
-  ]
+  "version": "2.1.0",
+  "type": "module",
+  "files": [
+    "build",
+    "documentation/*.md"
+  ],
+  "main": "./build/index.umd.cjs",
+  "module": "./build/index.js",
+  "exports": {
+    ".": {
+      "require": "./build/index.umd.cjs",
+      "import": "./build/index.js"
+    }
+  },
+  "scripts": {
+    "dev": "vite --config test/vite.config.js",
+    "build": "vite build --config vite.config.js",
+    "docs:api": "deno run -A https://raw.githubusercontent.com/ivteplo/deno-markdown-docs/v1.0.0-alpha/main.js ./library/index.js -o ./documentation/API.md"
+  },
+  "devDependencies": {
+    "vite": "^4.3.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ivteplo/html-sheet-element.git",
+    "directory": "components/sheet"
+  },
+  "bugs": {
+    "url": "https://github.com/ivteplo/html-sheet-element/issues"
+  },
+  "homepage": "https://github.com/ivteplo/html-sheet-element#readme"
 }
