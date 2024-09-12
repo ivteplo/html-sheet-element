@@ -3,29 +3,27 @@
 // Licensed under the Apache license 2.0
 //
 
-import SheetElement from "../library/sheet"
-
-
-customElements.define("ui-sheet", SheetElement)
+import { SheetElement } from "../library/index.js"
+SheetElement.defineAs("ui-sheet")
 
 const openSheetButton = document.getElementById("open-sheet")
 const sheet = document.getElementById("sheet")
 
 openSheetButton.addEventListener("click", () => {
-  sheet.showModal()
+	sheet.showModal()
 })
 
 sheet.addEventListener("open", () => {
-  console.log("The sheet has been opened")
+	console.log("The sheet has been opened")
 })
 
 sheet.addEventListener("close", () => {
-  console.log("The sheet has been closed with the return value:", sheet.returnValue)
+	console.log("The sheet has been closed with the return value:", sheet.returnValue)
 })
 
 sheet.addEventListener("cancel", event => {
-  if (!confirm("Are you sure you want to close the sheet?")) {
-    event.preventDefault()
-    console.log("The sheet won't be closed")
-  }
+	if (!confirm("Are you sure you want to close the sheet?")) {
+		event.preventDefault()
+		console.log("The sheet won't be closed")
+	}
 })

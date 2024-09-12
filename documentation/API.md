@@ -6,7 +6,8 @@ HTML Custom Element for creating sheets
 <summary><b>Example:</b> Define the element in the registry and use it in your HTML</summary>
 
 ```jsx
-customElements.define("ui-sheet", SheetElement)
+import SheetElement from "@ivteplo/html-sheet-element"
+SheetElement.defineAs("ui-sheet")
 
 // in HTML:
 <ui-sheet>
@@ -151,6 +152,21 @@ Gets or sets the return value for the sheet, usually to indicate which button th
 **see**: https://developer.mozilla.org/en-US/docs/Web/API/HTMLDialogElement/returnValue
 
 **type**: string
+
+
+## `static defineAs(tag: string): void`
+
+Function to define the sheet element in the HTML Custom Element Registry
+
+<details open>
+<summary><b>Example</b></summary>
+
+```jsx
+import SheetElement from "@ivteplo/html-sheet-element"
+SheetElement.defineAs("ui-sheet")
+```
+
+</details>
 
 
 ## `showModal(): void`

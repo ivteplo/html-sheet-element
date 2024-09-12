@@ -1,45 +1,45 @@
 <!--
-  Copyright (c) 2022-2024 Ivan Teplov
-  Licensed under the Apache license 2.0
+	Copyright (c) 2022-2024 Ivan Teplov
+	Licensed under the Apache license 2.0
 -->
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sheet</title>
+	<head>
+		<meta charset="UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Sheet</title>
 
-    <!-- Utility classes for CSS -->
-    <link rel="stylesheet" href="https://unpkg.com/@ivteplo/utilities.css@1.1.1/build/main.css">
+		<!-- Utility classes for CSS -->
+		<link rel="stylesheet" href="https://unpkg.com/@ivteplo/utilities.css@1.1.1/build/main.css">
 
-    <!-- Custom stylesheet -->
-    <link rel="stylesheet" href="main.css">
+		<!-- Custom stylesheet -->
+		<link rel="stylesheet" href="main.css">
 
-    <!-- Script that makes the sheet work -->
-    <script type="module" src="main.js" defer></script>
-  </head>
-  <body class="font-system column fill items-center justify-center">
-    <!-- Button to open a sheet -->
-    <button type="button" id="open-sheet" aria-controls="sheet">Open the Sheet</button>
+		<!-- Script that makes the sheet work -->
+		<script type="module" src="main.js" defer></script>
+	</head>
+	<body class="font-system column fill items-center justify-center">
+		<!-- Button to open a sheet -->
+		<button type="button" id="open-sheet" aria-controls="sheet">Open the Sheet</button>
 
-    <ui-sheet id="sheet">
-      <h2 slot="title-area">Contact</h2>
-      <form method="dialog" class="column">
-        <div class="column">
-          <label for="email">Recepient</label>
-          <input name="email" id="email" type="email" placeholder="Recepient's email" required>
-        </div>
-        <div class="column">
-          <label for="subject">Subject</label>
-          <input name="subject" type="text" placeholder="Subject of your message">
-        </div>
-        <div class="column">
-          <label for="message">Message</label>
-          <textarea name="message" placeholder="Your message"></textarea>
-        </div>
-        <button type="submit" value="send">Send</button>
-      </form>
-    </ui-sheet>
-  </body>
+		<ui-sheet id="sheet">
+			<h2 slot="title-area">Contact</h2>
+			<form method="dialog" class="column">
+				<div class="column">
+					<label for="email">Recepient</label>
+					<input name="email" id="email" type="email" placeholder="Recepient's email" required>
+				</div>
+				<div class="column">
+					<label for="subject">Subject</label>
+					<input name="subject" type="text" placeholder="Subject of your message">
+				</div>
+				<div class="column">
+					<label for="message">Message</label>
+					<textarea name="message" placeholder="Your message"></textarea>
+				</div>
+				<button type="submit" value="send">Send</button>
+			</form>
+		</ui-sheet>
+	</body>
 </html>

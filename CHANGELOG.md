@@ -17,7 +17,7 @@
 - New option to prevent closure on dragging the sheet down (`ignore-dragging-down` attribute)
 - Support forms with `method="dialog"` inside of sheet (like in the `<dialog>` element)
 - New `cancel` event that is called when a sheet gets closed without form submition
-  - Allows to prevent the form from closing
+    - Allows to prevent the form from closing
 
 ### Bug fixes
 - A duplicate event used to be triggered when calling `show`, `showModal`, or `close` twice

@@ -7,10 +7,10 @@ HTML Custom Element for creating sheets. Displayed as a bottom sheet on mobile a
 
 - There is a handle at the top of the sheet that can be used to open or close the sheet
 - The sheet can be closed using a button in the sheet header, using the `Esc` key, or by clicking outside the bottom sheet
-  - This behavior is configurable. You can turn off the `Esc` or the click outside the sheet when you want.
+    - This behavior is configurable. You can turn off the `Esc` or the click outside the sheet when you want.
 - API is similar to the `<dialog>` element's
-  - Supports forms inside of it
-  - Uses familiar method names and the same event names
+    - Supports forms inside of it
+    - Uses familiar method names and the same event names
 - There are many customization options
 
 

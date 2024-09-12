@@ -20,25 +20,24 @@
   ],
   "main": "./build/index.umd.cjs",
   "module": "./build/index.js",
-  "style": "./build/index.css",
   "exports": {
     ".": {
       "require": "./build/index.umd.cjs",
       "import": "./build/index.js"
-    },
-    "./index.css": "./build/index.css"
+    }
   },
   "scripts": {
     "dev": "vite --config test/vite.config.js",
     "build": "vite build --config vite.config.js",
-    "docs:api": "deno run -A https://raw.githubusercontent.com/ivteplo/deno-markdown-docs/v1.0.0-alpha/main.js ./library/sheet.jsx -o ./documentation/API.md"
+    "docs:api": "deno run -A https://raw.githubusercontent.com/ivteplo/deno-markdown-docs/v1.0.0-alpha/main.js ./library/index.js -o ./documentation/API.md"
   },
   "devDependencies": {
     "vite": "^4.3.0"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ivteplo/html-sheet-element.git"
+    "url": "git+https://github.com/ivteplo/html-sheet-element.git",
+    "directory": "components/sheet"
   },
   "bugs": {
     "url": "https://github.com/ivteplo/html-sheet-element/issues"
