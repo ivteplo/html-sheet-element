@@ -37,7 +37,7 @@ Before being able to use the element in your HTML, you need to specify a tag nam
 import { SheetElement } from "@ivteplo/html-sheet-element"
 
 // You can choose another tag name instead of `ui-sheet`
-customElements.define("ui-sheet", SheetElement)
+SheetElement.defineAs("ui-sheet")
 ```
 
 Then you can use the tag in your HTML:

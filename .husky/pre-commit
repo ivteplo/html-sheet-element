@@ -1,0 +1,3 @@
+npm run build
+npm run docs:api
+git add documentation/API.md

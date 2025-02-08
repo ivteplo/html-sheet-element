@@ -29,7 +29,8 @@
   "scripts": {
     "dev": "vite --config test/vite.config.js",
     "build": "vite build --config vite.config.js",
-    "docs:api": "deno run -A https://raw.githubusercontent.com/ivteplo/deno-markdown-docs/v1.0.0-alpha/main.js ./library/index.js -o ./documentation/API.md"
+    "docs:api": "deno run -A https://raw.githubusercontent.com/ivteplo/deno-markdown-docs/v1.0.0-alpha/main.js ./library/index.js -o ./documentation/API.md",
+    "prepare": "husky"
   },
   "devDependencies": {
     "vite": "^4.3.0"
