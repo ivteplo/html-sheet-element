@@ -51,7 +51,7 @@ Then you can use the tag in your HTML:
 To open a sheet, call the element's `showModal` method:
 
 ```javascript
-const sheet = document.querySelector("sheet")
+const sheet = document.querySelector("ui-sheet")
 sheet.showModal()
 ```
 
