@@ -33,7 +33,9 @@
     "prepare": "husky"
   },
   "devDependencies": {
-    "vite": "^4.3.0"
+    "typescript": "^5.8.2",
+    "vite": "^6.2.0",
+    "vite-plugin-dts": "^4.5.1"
   },
   "repository": {
     "type": "git",

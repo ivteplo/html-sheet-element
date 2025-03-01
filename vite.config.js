@@ -4,6 +4,8 @@
 //
 
 import { defineConfig } from "vite"
+import dtsPlugin from "vite-plugin-dts"
+
 import { resolve } from "path"
 
 export default defineConfig({
@@ -30,5 +32,10 @@ export default defineConfig({
 				exports: "named",
 			}
 		}
-	}
+	},
+	plugins: [
+		dtsPlugin({
+			rollupTypes: true
+		})
+	]
 })
