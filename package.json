@@ -20,6 +20,7 @@
   ],
   "main": "./build/index.umd.cjs",
   "module": "./build/index.js",
+  "types": "./build/index.d.ts",
   "exports": {
     ".": {
       "require": "./build/index.umd.cjs",
