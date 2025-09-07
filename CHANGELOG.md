@@ -1,9 +1,9 @@
 # Changelog
 
+## v2.1.0
 
-## v1.0.0
-- Basic functionality implementation
-- API documentation
+### Bug fixes
+- Do not access attributes inside of the constructor. It should not be done according to the standard.
 
 
 ## v2.0.0
@@ -23,7 +23,6 @@
 - A duplicate event used to be triggered when calling `show`, `showModal`, or `close` twice
 
 
-## v2.1.0
-
-### Bug fixes
-- Do not access attributes inside of the constructor. It should not be done according to the standard.
+## v1.0.0
+- Basic functionality implementation
+- API documentation
