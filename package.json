@@ -35,9 +35,9 @@
   },
   "devDependencies": {
     "husky": "^9.1.7",
-    "typescript": "^5.8.2",
-    "vite": "^6.2.0",
-    "vite-plugin-dts": "^4.5.1"
+    "typescript": "^5.9.2",
+    "vite": "^7.1.4",
+    "vite-plugin-dts": "^4.5.4"
   },
   "repository": {
     "type": "git",
