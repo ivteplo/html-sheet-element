@@ -256,7 +256,6 @@ export class SheetElement extends HTMLElement {
 	showModal() {
 		if (!this.hasAttribute("open")) {
 			this.setAttribute("open", true)
-			this.ariaHidden = false
 
 			const event = new CustomEvent("open", {
 				bubbles: false,
@@ -283,7 +282,6 @@ export class SheetElement extends HTMLElement {
 		}
 
 		this.removeAttribute("open")
-		this.ariaHidden = true
 
 		const event = new CustomEvent("close", {
 			bubbles: false,
