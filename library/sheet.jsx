@@ -203,22 +203,22 @@ export class SheetElement extends HTMLElement {
 
 			Object.defineProperties(this.options, {
 				closeOnBackdropClick: {
-					get: () =>
-						!this.hasAttribute("ignore-backdrop-click"),
+					get: () => [null, "false"].includes(
+						this.getAttribute("ignore-backdrop-click")),
 					set: value => Boolean(value)
 						? this.removeAttribute("ignore-backdrop-click")
 						: this.setAttribute("ignore-backdrop-click", true)
 				},
 				closeOnEscapeKey: {
-					get: () =>
-						!this.hasAttribute("ignore-escape-key"),
+					get: () => [null, "false"].includes(
+						this.getAttribute("ignore-escape-key")),
 					set: value => Boolean(value)
 						? this.removeAttribute("ignore-escape-key")
 						: this.setAttribute("ignore-escape-key", true)
 				},
 				closeOnDraggingDown: {
-					get: () =>
-						!this.hasAttribute("ignore-dragging-down"),
+					get: () => [null, "false"].includes(
+						this.getAttribute("ignore-dragging-down")),
 					set: value => Boolean(value)
 						? this.removeAttribute("ignore-dragging-down")
 						: this.setAttribute("ignore-dragging-down", true)
