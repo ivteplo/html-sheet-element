@@ -5,8 +5,9 @@
 
 /** @jsx createElement */
 
-import { isFocused, touchPosition, getCSSVariableValue, createElement, elementContains, mapNumber } from "./helpers.js"
+import { isFocused, touchPosition, getCSSVariableValue, createElement, elementContains, mapNumber, focusOnFirstDescendantOf } from "./helpers.js"
 import { styleSheet } from "./styleSheet.js"
+
 
 /**
  * HTML Custom Element for creating sheets
@@ -256,6 +257,7 @@ export class SheetElement extends HTMLElement {
 	showModal() {
 		if (!this.hasAttribute("open")) {
 			this.setAttribute("open", true)
+			focusOnFirstDescendantOf(this)
 
 			const event = new CustomEvent("open", {
 				bubbles: false,

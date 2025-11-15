@@ -20,24 +20,32 @@
 		<script type="module" src="main.js" defer></script>
 	</head>
 	<body class="font-system column fill items-center justify-center">
-		<!-- Button to open a sheet -->
+		<!-- Button to open the sheet -->
 		<button type="button" id="open-sheet" aria-controls="sheet">Open the Sheet</button>
 
-		<ui-sheet id="sheet">
-			<h2 slot="title-area">Contact</h2>
+		<!-- The sheet to open -->
+		<ui-sheet id="sheet" aria-labelledby="sheet-title">
+			<h2 id="sheet-title" slot="title-area">Contact</h2>
+
 			<form method="dialog" class="column">
+				<!-- `tabindex` set to make the first element focusable -->
+				<p tabindex="0">Please fill out the following form.</p>
+
 				<div class="column">
 					<label for="email">Recepient</label>
 					<input name="email" id="email" type="email" placeholder="Recepient's email" required>
 				</div>
+
 				<div class="column">
 					<label for="subject">Subject</label>
 					<input name="subject" type="text" placeholder="Subject of your message">
 				</div>
+
 				<div class="column">
 					<label for="message">Message</label>
 					<textarea name="message" placeholder="Your message"></textarea>
 				</div>
+
 				<button type="submit" value="send">Send</button>
 			</form>
 		</ui-sheet>

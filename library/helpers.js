@@ -109,3 +109,50 @@ export function mapNumber(number, currentRange, newRange) {
 	const newRangeSize = newRange[1] - newRange[0]
 	return (number - currentRange[0]) / currentRangeSize * newRangeSize + newRange[0]
 }
+
+/**
+ * @param {Node} element
+ * @returns {boolean}
+ */
+export function isFocusable(element) {
+	// If `tabindex` of the element is negative
+	// or if the element is disabled,
+	// it is not possible to focus on it.
+	if (element.tabIndex < 0 || element.disabled) {
+		return false
+	}
+
+	if (element instanceof HTMLAnchorElement) {
+		return Boolean(element.href)
+	}
+
+	if (element instanceof HTMLInputElement) {
+		return element.type !== "hidden"
+	}
+
+	return element instanceof HTMLElement
+}
+
+/**
+ * Focus on the first focusable element inside of the provided one.
+ * @param {HTMLElement} element
+ * @returns {boolean} - whether a focusable element was found.
+ */
+export function focusOnFirstDescendantOf(element) {
+	for (const child of element.childNodes) {
+		// If we can focus on the child node itself.
+		if (isFocusable(child)) {
+			console.log("focused on", child)
+			child.focus()
+			return true
+		}
+
+		// If the child node has children
+		// which are focusable, focus on them.
+		if (focusOnFirstDescendantOf(child)) {
+			return true
+		}
+	}
+
+	return false
+}

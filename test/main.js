@@ -17,13 +17,12 @@ sheet.addEventListener("open", () => {
 	console.log("The sheet has been opened")
 })
 
+sheet.addEventListener("cancel", () => {
+	// Calling `event.preventDefault()` would prevent the sheet from getting closed
+	console.log("The sheet will be closed")
+})
+
 sheet.addEventListener("close", () => {
 	console.log("The sheet has been closed with the return value:", sheet.returnValue)
 })
 
-sheet.addEventListener("cancel", event => {
-	if (!confirm("Are you sure you want to close the sheet?")) {
-		event.preventDefault()
-		console.log("The sheet won't be closed")
-	}
-})
