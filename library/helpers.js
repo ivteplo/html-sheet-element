@@ -142,7 +142,6 @@ export function focusOnFirstDescendantOf(element) {
 	for (const child of element.childNodes) {
 		// If we can focus on the child node itself.
 		if (isFocusable(child)) {
-			console.log("focused on", child)
 			child.focus()
 			return true
 		}
